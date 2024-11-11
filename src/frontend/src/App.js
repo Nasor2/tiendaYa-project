@@ -17,7 +17,7 @@ function App() {
   return (
     <div>
       <h1>{message}</h1>
-      <h1>Holsa</h1>
+      <h1>Hoslsa</h1>
     </div>
   );
 }
