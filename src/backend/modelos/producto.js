@@ -26,16 +26,39 @@ const getProductos = (callback) => {
 };
 
 const searchProductos = (termino, callback) => {
-  const query = 'SELECT * FROM Producto WHERE nombre LIKE ? OR descripcion LIKE ?';
   const searchTerm = `%${termino}%`;
-  connection.query(query, [searchTerm, searchTerm], (err, results) => {
+
+  // Primero, intentamos buscar en la tabla Producto
+  const queryProducto = 'SELECT * FROM Producto WHERE nombre LIKE ? OR descripcion LIKE ?';
+  connection.query(queryProducto, [searchTerm, searchTerm], (err, resultsProducto) => {
     if (err) {
       console.log('Error al buscar productos:', err);
       return callback(err, null);
     }
-    callback(null, results);
+
+    // Si encontramos productos en la tabla Producto, los retornamos
+    if (resultsProducto.length > 0) {
+      return callback(null, resultsProducto);
+    }
+
+    // Si no encontramos productos, buscamos en la tabla CategoriaProducto
+    const queryCategoria = `
+      SELECT p.* 
+      FROM Producto p
+      JOIN CategoriaProducto c ON p.idCategoria = c.idCategoria
+      WHERE c.nombre_categoria LIKE ?`; // Usamos el término para buscar por nombre de categoría
+    connection.query(queryCategoria, [searchTerm], (err, resultsCategoria) => {
+      if (err) {
+        console.log('Error al buscar productos por categoría:', err);
+        return callback(err, null);
+      }
+      
+      // Retornamos los productos de la categoría encontrada
+      callback(null, resultsCategoria);
+    });
   });
 };
+
 
 module.exports = {
   createProducto,

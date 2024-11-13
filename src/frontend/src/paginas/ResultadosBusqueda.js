@@ -7,7 +7,7 @@ const ResultadosBusqueda = () => {
   const [productos, setProductos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
-  const query = new URLSearchParams(location.search).get('q');
+  const query = new URLSearchParams(location.search).get('q'); // El 'q' es el idCategoria
 
   // Obtener productos según el término de búsqueda o la categoría seleccionada
   useEffect(() => {
