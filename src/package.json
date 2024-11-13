@@ -1,0 +1,19 @@
+{
+  "name": "tiendaya-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start-backend": "node src/backend/server.js",
+    "start-frontend": "cd src/frontend && npm start",
+    "dev": "concurrently \"npm run start-backend\" \"npm run start-frontend\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "concurrently": "^9.1.0",
+    "dotenv": "^16.4.5",
+    "react-router-dom": "^6.28.0"
+  }
+}
