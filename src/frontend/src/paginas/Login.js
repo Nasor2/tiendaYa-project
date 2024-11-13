@@ -26,13 +26,9 @@ const Login = () => {
         // Guardar el token y el role en el localStorage
         localStorage.setItem('token', data.token);
         localStorage.setItem('role', data.role);
-
-        // Redirigir según el role del usuario
-        if (data.role === 'cliente') {
-          navigate('/');
-        } else if (data.role === 'tendero') {
-          navigate('/');
-        }
+        
+        // Redirigir 
+        navigate('/');
       } else {
         setError(data.message); // Mostrar error si es que no fue exitoso
       }
@@ -41,7 +37,6 @@ const Login = () => {
       setError('Error en la conexión al servidor');
     }
   };
-  
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">

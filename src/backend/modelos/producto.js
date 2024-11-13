@@ -13,6 +13,32 @@ const createProducto = (data, callback) => {
   });
 };
 
+// Función para obtener todos los productos
+const getProductos = (callback) => {
+  const query = 'SELECT * FROM Producto';
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.log('Error al obtener productos:', err);
+      return callback(err, null);
+    }
+    callback(null, results);
+  });
+};
+
+const searchProductos = (termino, callback) => {
+  const query = 'SELECT * FROM Producto WHERE nombre LIKE ? OR descripcion LIKE ?';
+  const searchTerm = `%${termino}%`;
+  connection.query(query, [searchTerm, searchTerm], (err, results) => {
+    if (err) {
+      console.log('Error al buscar productos:', err);
+      return callback(err, null);
+    }
+    callback(null, results);
+  });
+};
+
 module.exports = {
   createProducto,
+  getProductos,
+  searchProductos
 };

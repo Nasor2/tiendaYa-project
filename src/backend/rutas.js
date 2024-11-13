@@ -17,8 +17,12 @@ router.get('/categorias', categoriaController.getCategorias);
 router.post('/register', authController.registerUser);
 router.post('/login', authController.loginUser);
 
-// Ruta para agregar productos (solo tenderos pueden acceder)
-router.post('/productos', verificarToken, productosController.agregarProducto);
+// Ruta para obtener todos los productos
+router.get('/productos', productosController.obtenerProductos);
 
+// Ruta para agregar un nuevo producto (asegúrate de agregar autenticación)
+router.post('/productos', productosController.agregarProducto);
+
+router.get('/productos/buscar', productosController.buscarProductos);
 
 module.exports = router;
