@@ -20,8 +20,20 @@ const findTenderoByEmail = (email, callback) => {
   connection.query(query, [email], callback);
 };
 
+const asociarProductoATendero = (idTendero, idProducto, callback) => {
+  const query = 'INSERT INTO TenderoProducto (idTendero, idProducto) VALUES (?, ?)';
+  connection.query(query, [idTendero, idProducto], (err, result) => {
+    if (err) {
+      console.log('Error al asociar producto con tendero:', err);
+      return callback(err, null);
+    }
+    callback(null, result);
+  });
+};
+
 // Exportar las funciones
 module.exports = {
   createTendero,
-  findTenderoByEmail
+  findTenderoByEmail,
+  asociarProductoATendero
 };

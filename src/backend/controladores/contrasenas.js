@@ -39,34 +39,66 @@ exports.registerUser = async (req, res) => {
   }
 };
 
+// Iniciar sesión sin enviar el rol en la solicitud
 exports.loginUser = async (req, res) => {
-  const { correo, password, role } = req.body;
+  const { correo, password } = req.body;
 
-  // Verificar que el rol sea válido
-  if (role !== 'cliente' && role !== 'tendero') {
-    return res.status(400).json({ message: 'Rol no válido' });
-  }
+  console.log('Correo recibido:', correo);  // Log para verificar el correo recibido
 
-  const findUserByEmail = role === 'cliente' ? clienteModel.findClienteByEmail : tenderoModel.findTenderoByEmail;
+  // Buscar al usuario como 'cliente' primero
+  clienteModel.findClienteByEmail(correo, async (err, results) => {
+    if (err) {
+      console.log('Error al buscar cliente:', err);
+      return res.status(500).json({ message: 'Error en la base de datos al buscar usuario' });
+    }
 
-  // Buscar al usuario por correo
-  findUserByEmail(correo, async (err, results) => {
-    if (err) return res.status(500).json({ message: 'Error en la base de datos al buscar usuario' });
-    if (!results.length) return res.status(401).json({ message: 'Usuario no encontrado' });
+    if (results.length) {
+      const user = results[0];
+      console.log('Cliente encontrado:', user);  // Verifica el usuario encontrado
 
-    const user = results[0];
+      const validPassword = await bcrypt.compare(password, user.password_hash);
+      if (!validPassword) {
+        console.log('Contraseña incorrecta para cliente');
+        return res.status(401).json({ message: 'Contraseña incorrecta' });
+      }
 
-    // Comparar la contraseña
-    const validPassword = await bcrypt.compare(password, user.password_hash);
-    if (!validPassword) return res.status(401).json({ message: 'Contraseña incorrecta' });
+      const token = jwt.sign({ id: user.idCliente, role: 'cliente' }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      return res.json({
+        token,
+        role: 'cliente',
+        message: 'Inicio de sesión exitoso',
+      });
+    }
 
-    // Generar el token de autenticación
-    const token = jwt.sign({ id: user.idCliente || user.idTendero, role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    console.log('Cliente no encontrado, buscando tendero...');
+    
+    // Si no es cliente, buscar como 'tendero'
+    tenderoModel.findTenderoByEmail(correo, async (err, results) => {
+      if (err) {
+        console.log('Error al buscar tendero:', err);
+        return res.status(500).json({ message: 'Error en la base de datos al buscar usuario' });
+      }
 
-    res.json({
-      token,
-      role,
-      message: 'Inicio de sesión exitoso',
+      if (results.length) {
+        const user = results[0];
+        console.log('Tendero encontrado:', user);
+
+        const validPassword = await bcrypt.compare(password, user.password_hash);
+        if (!validPassword) {
+          console.log('Contraseña incorrecta para tendero');
+          return res.status(401).json({ message: 'Contraseña incorrecta' });
+        }
+
+        const token = jwt.sign({ id: user.idTendero, role: 'tendero' }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        return res.json({
+          token,
+          role: 'tendero',
+          message: 'Inicio de sesión exitoso',
+        });
+      }
+
+      console.log('Usuario no encontrado');
+      return res.status(401).json({ message: 'Usuario no encontrado' });
     });
   });
 };
