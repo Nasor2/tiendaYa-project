@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CategoriaGrid from '../componentes/CategoriaGrid';
+import { Link } from 'react-router-dom';
+
 
 const Inicio = () => {
   const [categorias, setCategorias] = useState([]);
@@ -18,6 +20,7 @@ const Inicio = () => {
         <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-[1100px]">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold text-gray-800">Categorías</h2>
+            <Link to="/categorias" className="text-blue-500 hover:underline">Mostrar todas las categorías</Link>
           </div>
           <CategoriaGrid categorias={categorias} />
         </div>
