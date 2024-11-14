@@ -13,7 +13,6 @@ function App() {
     <Router>
       <div className="flex flex-col min-h-screen">
         <div className='flex-1'>
-        <Navbar /> {/* Navbar global */}
           <Routes>
             <Route path="/" element={<Inicio />} />
             <Route path="/login" element={<Login />} />
