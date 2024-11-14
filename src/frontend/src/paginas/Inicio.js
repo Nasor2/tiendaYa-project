@@ -18,7 +18,6 @@ const Inicio = () => {
         <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-[1100px]">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold text-gray-800">Categorías</h2>
-            <a href="#all-categories" className="text-blue-500 hover:underline">Mostrar todas las categorías</a>
           </div>
           <CategoriaGrid categorias={categorias} />
         </div>

@@ -6,6 +6,7 @@ import Login from './paginas/Login';
 import Registro from './paginas/Registro';
 import Inicio from './paginas/Inicio';
 import Footer from './componentes/Footer';
+import Categorias from './paginas/Categorias';
 import ResultadosBusqueda from './paginas/ResultadosBusqueda';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Registro />} />
           <Route path="/buscar" element={<ResultadosBusqueda />} /> 
+          <Route path="/categorias" element={<Categorias />} /> 
         </Routes>
         <Footer className="mt-auto" />
       </div>
