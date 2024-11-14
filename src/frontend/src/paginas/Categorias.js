@@ -47,6 +47,7 @@ const Categorias = () => {
             >
               <img
                 src={categoria.imagen_url}
+                alt={categoria.nombre_categoria}
                 className="w-16 h-16 object-cover rounded-full"
               />
               <span className="text-lg font-medium">{categoria.nombre_categoria}</span>
