@@ -54,7 +54,6 @@ const Navbar = () => {
         {/* Navigation Links */}
         <nav className="flex items-center space-x-6 text-gray-700 dark:text-gray-200">
           <Link to="/categorias" className="hover:underline">Categorías</Link>
-          <Link to="/productos" className="hover:underline">Productos</Link>
 
           {/* Conditionally Rendered Links */}
           {!user ? (

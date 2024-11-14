@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Filtros from '../componentes/Filtros'; // Importar el componente de filtros
-
+import Navbar from '../componentes/Navbar';
 const ResultadosBusqueda = () => {
   const [productos, setProductos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,8 +35,10 @@ const ResultadosBusqueda = () => {
   if (isLoading) return <p>Cargando...</p>;
 
   return (
+
     <div className="container mx-auto py-6 flex">
       {/* Filtros de categorías */}
+      <Navbar />
       <Filtros onFilterChange={handleFilterChange} />
 
       {/* Resultados de productos */}
