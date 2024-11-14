@@ -1,7 +1,7 @@
 // rutas.js
 const express = require('express');
 const router = express.Router();
-const authController = require('./controladores/contrasenas');
+const authController = require('./controladores/autenticacion');
 const clienteController = require('./controladores/clientes');
 const categoriaController = require('./controladores/categorias');
 const productosController = require('./controladores/productos');
