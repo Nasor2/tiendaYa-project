@@ -1,3 +1,4 @@
+// paginas/Registro.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import NavbarStatico from '../componentes/NavbarStatico';

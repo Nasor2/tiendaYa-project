@@ -3,25 +3,30 @@ import React, { useState, useEffect } from 'react';
 const Filtros = ({ onFilterChange }) => {
   const [categorias, setCategorias] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null); // Manejo de errores
 
   // Obtener las categorías
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
         const response = await fetch('http://localhost:3000/categorias');
+        if (!response.ok) {
+          throw new Error('Error al obtener las categorías');
+        }
         const data = await response.json();
-        console.log("Categorías obtenidas:", data); // Verificar los datos
         setCategorias(data);
         setIsLoading(false);
       } catch (error) {
         console.error('Error al obtener categorías:', error);
+        setError(error.message);
         setIsLoading(false);
       }
     };
     fetchCategorias();
   }, []);
 
-  if (isLoading) return <p>Cargando filtros...</p>;
+  if (isLoading) return <p className="text-center text-gray-500">Cargando filtros...</p>;
+  if (error) return <p className="text-center text-red-500">Hubo un error al cargar las categorías: {error}</p>;
 
   return (
     <aside className="w-full md:w-1/4 lg:w-1/5 p-4 bg-white rounded-lg shadow-md">

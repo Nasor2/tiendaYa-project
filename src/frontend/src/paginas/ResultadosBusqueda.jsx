@@ -22,6 +22,7 @@ const ResultadosBusqueda = () => {
         setIsLoading(false);
       }
     };
+    
     if (query) {
       fetchProductos();
     }

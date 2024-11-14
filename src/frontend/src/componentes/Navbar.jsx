@@ -30,11 +30,10 @@ const Navbar = () => {
   return (
     <header className="bg-white dark:bg-gray-800 shadow-lg sticky top-0 z-10 font-sans">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-
         {/* Logo */}
         <Link to="/" className="text-4xl font-bold text-blue-600 dark:text-white">TiendaYa</Link>
 
-        {/* Search Bar */}
+        {/* Barra de búsqueda */}
         <div className="hidden lg:flex items-center w-full max-w-lg mx-auto relative">
           <input
             type="text"
@@ -51,11 +50,11 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Navigation Links */}
+        {/* Enlaces de navegación */}
         <nav className="flex items-center space-x-6 text-gray-700 dark:text-gray-200">
           <Link to="/categorias" className="hover:underline">Categorías</Link>
 
-          {/* Conditionally Rendered Links */}
+          {/* Enlaces condicionales */}
           {!user ? (
             <>
               <Link to="/register" className="hover:underline">Crea tu cuenta</Link>
@@ -72,7 +71,7 @@ const Navbar = () => {
             </>
           )}
 
-          {/* Cart Icon */}
+          {/* Icono del carrito */}
           <Link to="/cart" className="relative text-gray-500 dark:text-gray-200 hover:opacity-80">
             <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
               <path d="M3 4a1 1 0 011-1h2.23a1 1 0 01.92.61l1.54 3.73h12.21a1 1 0 01.97 1.24l-2.27 9a1 1 0 01-.97.76H7.31l1.54 3.73a1 1 0 01-.92 1.39H4a1 1 0 110-2h2.23l1.54-3.73H5a1 1 0 01-.97-1.24l2.27-9A1 1 0 016.58 6H5a1 1 0 01-1-1V4z"></path>

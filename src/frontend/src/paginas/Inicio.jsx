@@ -4,6 +4,7 @@ import axios from 'axios';
 import CategoriaGrid from '../componentes/CategoriaGrid';
 import { Link } from 'react-router-dom';
 import Navbar from '../componentes/Navbar';
+
 const Inicio = () => {
   const [categorias, setCategorias] = useState([]);
 
@@ -15,13 +16,20 @@ const Inicio = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-    <Navbar/>
+      {/* Navbar */}
+      <Navbar />
+
+      {/* Main content */}
       <main className="flex-grow flex justify-center items-center bg-gray-100">
         <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-[1100px]">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold text-gray-800">Categorías</h2>
-            <Link to="/categorias" className="text-blue-500 hover:underline">Mostrar todas las categorías</Link>
+            <Link to="/categorias" className="text-blue-500 hover:underline">
+              Mostrar todas las categorías
+            </Link>
           </div>
+
+          {/* CategoriaGrid */}
           <CategoriaGrid categorias={categorias} />
         </div>
       </main>

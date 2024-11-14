@@ -1,3 +1,4 @@
+// paginas/Login.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import NavbarStatico from '../componentes/NavbarStatico';
@@ -27,7 +28,7 @@ const Login = () => {
         localStorage.setItem('token', data.token);
         localStorage.setItem('role', data.role);
         
-        // Redirigir 
+        // Redirigir al inicio
         navigate('/');
       } else {
         setError(data.message); // Mostrar error si no fue exitoso
@@ -54,7 +55,7 @@ const Login = () => {
           {error && <p className="text-red-500 mb-4">{error}</p>}
 
           <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium">Correo electrónico</label>
+            <label htmlFor="correo" className="block text-sm font-medium">Correo electrónico</label>
             <input
               id="correo"
               type="email"
