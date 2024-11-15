@@ -1,4 +1,4 @@
-// controladores/contrasenas.js
+// controladores/autentificacion.js
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const clienteModel = require('../modelos/cliente');  // Asegúrate de tener el modelo cliente correctamente importado
@@ -7,10 +7,10 @@ const tenderoModel = require('../modelos/tendero');  // Asegúrate de tener el m
 // Función para el registro de usuario
 exports.registerUser = async (req, res) => {
   console.log('req.body:', req.body);
-  const { role, nombre, apellido, correo, telefono, direccion, barrio, password, tienda } = req.body;
+  const { role, nombre, apellido, correo, telefono, direccion, password, tienda } = req.body;
 
   // Verifica si los datos están presentes en el cuerpo de la solicitud
-  if (!role || !nombre || !apellido || !correo || !telefono || !direccion || !barrio || !password) {
+  if (!role || !nombre || !apellido || !correo || !telefono || !direccion || !password) {
     console.log('Datos faltantes en el registro:', req.body);
     return res.status(400).json({ message: 'Faltan datos en la solicitud' });
   }
@@ -20,13 +20,13 @@ exports.registerUser = async (req, res) => {
 
     if (role === 'cliente') {
       // Crear cliente
-      clienteModel.createCliente({ nombre, apellido, correo, telefono, direccion, barrio, passwordHash }, (err, result) => {
+      clienteModel.createCliente({ nombre, apellido, correo, passwordHash, telefono, direccion}, (err, result) => {
         if (err) return res.status(500).json({ message: 'Error en la base de datos' });
         res.status(201).json({ id: result.insertId, nombre, correo, role, message: 'Registro exitoso' });
       });
     } else if (role === 'tendero') {
       // Crear tendero
-      tenderoModel.createTendero({ nombre, apellido, correo, direccion, telefono, tienda, barrio, passwordHash }, (err, result) => {
+      tenderoModel.createTendero({ nombre, apellido, correo, passwordHash, telefono, tienda }, (err, result) => {
         if (err) return res.status(500).json({ message: 'Error en la base de datos 2' });
         res.status(201).json({ id: result.insertId, nombre, correo, role, message: 'Registro exitoso' });
       });

@@ -21,7 +21,7 @@ router.post('/login', authController.loginUser);
 router.get('/productos', productosController.obtenerProductos);
 
 // Ruta para agregar un nuevo producto (asegúrate de agregar autenticación)
-router.post('/productos', productosController.agregarProducto);
+router.post('/productos/agregar-producto', productosController.agregarProducto);
 
 router.get('/productos/buscar', productosController.buscarProductos);
 

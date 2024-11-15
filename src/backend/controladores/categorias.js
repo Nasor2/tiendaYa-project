@@ -2,7 +2,7 @@
 const db = require('../db'); // Asegúrate de que el archivo 'db.js' tenga la configuración de conexión a MySQL.
 
 const getCategorias = (req, res) => {
-  const query = 'SELECT * FROM CategoriaProducto'; // Ajusta según el nombre exacto de tu tabla
+  const query = 'SELECT * FROM categorias'; // Ajusta según el nombre exacto de tu tabla
 
   db.query(query, (error, results) => {
     if (error) {

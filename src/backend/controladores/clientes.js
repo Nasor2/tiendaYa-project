@@ -3,7 +3,7 @@ const connection = require('../db');  // Conexion a la base de datos
 
 // Función para obtener los clientes
 exports.getClientes = (req, res) => {
-  const sql = 'SELECT * FROM Cliente';  // Consulta SQL para obtener todos los clientes
+  const sql = 'SELECT * FROM clientes';  // Consulta SQL para obtener todos los clientes
   connection.query(sql, (err, results) => {
     if (err) {
       console.error('Error en la consulta:', err);

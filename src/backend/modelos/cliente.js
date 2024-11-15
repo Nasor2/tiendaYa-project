@@ -2,9 +2,10 @@
 const connection = require('../db');
 
 const createCliente = (data, callback) => {
-  const { nombre, apellido, correo, telefono, direccion, barrio, passwordHash } = data;
-  const query = 'INSERT INTO Cliente (nombre, apellido, correo, telefono, direccion, barrio, password_hash) VALUES (?, ?, ?, ?, ?, ?, ?)';
-  connection.query(query, [nombre, apellido, correo, telefono, direccion, barrio, passwordHash], (err, result) => {
+  const { nombre, apellido, correo, passwordHash, telefono, direccion } = data;
+  
+  const query = 'INSERT INTO clientes (nombre, apellido, correo, password_hash, telefono, direccion, fecha_registro) VALUES (?, ?, ?, ?, ?, ?, NOW())';
+  connection.query(query, [nombre, apellido, correo, passwordHash, telefono, direccion], (err, result) => {
     if (err) {
       console.log('Error en la base de datos:', err);
       return callback(err, null);
@@ -14,11 +15,12 @@ const createCliente = (data, callback) => {
   });
 };
 
+
 // Exportar las funciones
 module.exports = {
   createCliente,
   findClienteByEmail: (email, callback) => {
-    const sql = 'SELECT * FROM Cliente WHERE correo = ?';
+    const sql = 'SELECT * FROM clientes WHERE correo = ?';
     connection.query(sql, [email], callback);
   }
 };

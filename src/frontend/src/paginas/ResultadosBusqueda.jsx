@@ -22,7 +22,7 @@ const ResultadosBusqueda = () => {
         setIsLoading(false);
       }
     };
-    
+
     if (query) {
       fetchProductos();
     }
@@ -56,7 +56,7 @@ const ResultadosBusqueda = () => {
               >
                 {/* Imagen del producto */}
                 <img
-                  src={producto.imagenUrl}
+                  src={producto.imagen_url}  // Asegúrate que el nombre del campo sea el correcto
                   alt={producto.nombre}
                   className="w-full h-48 object-contain rounded-lg mb-4"
                 />
@@ -65,7 +65,8 @@ const ResultadosBusqueda = () => {
                 <div className="flex flex-col justify-between flex-1">
                   <h3 className="text-lg font-semibold text-gray-900">{producto.nombre}</h3>
                   <p className="text-gray-600 text-sm mb-2">{producto.descripcion}</p>
-                  <p className="text-blue-600 font-bold text-xl mb-1">${producto.precio}</p>
+                  <p className="text-blue-600 font-bold text-xl mb-1">${producto.precio_venta}</p>
+                  <p className="text-gray-500 text-sm mt-2">Vendido por: {producto.nombre_tienda}</p>  {/* Mostrar el nombre de la tienda */}
                 </div>
               </div>
             ))}
@@ -75,5 +76,6 @@ const ResultadosBusqueda = () => {
     </div>
   );
 };
+
 
 export default ResultadosBusqueda;

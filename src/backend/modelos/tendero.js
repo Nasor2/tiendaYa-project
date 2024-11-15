@@ -2,9 +2,9 @@
 const connection = require('../db');
 
 const createTendero = (data, callback) => {
-  const { nombre, apellido, correo, direccion, telefono, tienda, barrio, passwordHash } = data;
-  const query = 'INSERT INTO Tendero (nombre, apellido, correo, direccion, telefono, tienda, barrio, password_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-  connection.query(query, [nombre, apellido, correo, direccion, telefono, tienda, barrio, passwordHash], (err, result) => {
+  const { nombre, apellido, correo, passwordHash, telefono, tienda } = data;
+  const query = 'INSERT INTO tenderos (nombre, apellido, correo, password_hash, telefono, nombre_tienda, fecha_registro) VALUES (?, ?, ?, ?, ?, ?, NOW())';
+  connection.query(query, [nombre, apellido, correo, passwordHash, telefono, tienda], (err, result) => {
     if (err) {
       console.log('Error en la base de datos:', err);
       return callback(err, null);
@@ -14,14 +14,17 @@ const createTendero = (data, callback) => {
   });
 };
 
+
 // Función para buscar un tendero por correo
 const findTenderoByEmail = (email, callback) => {
-  const query = 'SELECT * FROM Tendero WHERE correo = ?';
+  const query = 'SELECT * FROM tenderos WHERE correo = ?';
   connection.query(query, [email], callback);
 };
 
+
+
 const asociarProductoATendero = (idTendero, idProducto, callback) => {
-  const query = 'INSERT INTO TenderoProducto (idTendero, idProducto) VALUES (?, ?)';
+  const query = 'INSERT INTO inventario_tendero (idTendero, idProducto) VALUES (?, ?)';
   connection.query(query, [idTendero, idProducto], (err, result) => {
     if (err) {
       console.log('Error al asociar producto con tendero:', err);
@@ -30,6 +33,7 @@ const asociarProductoATendero = (idTendero, idProducto, callback) => {
     callback(null, result);
   });
 };
+
 
 // Exportar las funciones
 module.exports = {

@@ -1,6 +1,7 @@
 // paginas/Registro.js
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import NavbarStatico from '../componentes/NavbarStatico';
 
 const Registro = () => {
@@ -8,6 +9,7 @@ const Registro = () => {
     nombre: '', apellido: '', correo: '', telefono: '', direccion: '', barrio: '', password: '', role: '', tienda: '',
   });
   const [message, setMessage] = useState('');
+  const navigate = useNavigate(); // Usamos useNavigate para redirigir después de registrar
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -21,8 +23,26 @@ const Registro = () => {
     }
 
     try {
+      // Registrar al usuario
       const response = await axios.post('http://localhost:3000/register', formData);
       setMessage(response.data.message);
+
+      if (response.data.message === 'Registro exitoso') {
+        // Realizar login automáticamente después del registro
+        const loginResponse = await axios.post('http://localhost:3000/login', {
+          correo: formData.correo,
+          password: formData.password,
+        });
+
+        if (loginResponse.data.token) {
+          // Guardar token y rol en localStorage
+          localStorage.setItem('token', loginResponse.data.token);
+          localStorage.setItem('role', loginResponse.data.role);
+
+          // Redirigir al inicio
+          navigate('/');
+        }
+      }
     } catch (error) {
       setMessage(error.response?.data?.message || 'Error en el registro');
     }
