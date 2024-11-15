@@ -7,6 +7,7 @@ import Inicio from './paginas/Inicio';
 import Footer from './componentes/Footer';
 import Categorias from './paginas/Categorias';
 import ResultadosBusqueda from './paginas/ResultadosBusqueda';
+import VistaProducto from './paginas/VistaProducto';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/register" element={<Registro />} />
             <Route path="/buscar" element={<ResultadosBusqueda />} /> 
             <Route path="/categorias" element={<Categorias />} />
+            <Route path="/producto/:nombre" element={<VistaProducto />} />
           </Routes>
         </div>
         <Footer />
