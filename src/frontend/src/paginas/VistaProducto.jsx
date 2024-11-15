@@ -24,6 +24,30 @@ const ProductDetail = () => {
     }
   };
 
+  const relatedProducts = [
+    {
+      image: "/api/placeholder/200/250",
+      name: "Sprite",
+      description: "Bebida gaseosa",
+      price: 1.00,
+      store: "La Esquina Verde"
+    },
+    {
+      image: "/api/placeholder/200/250",
+      name: "Fanta",
+      description: "Bebida gaseosa",
+      price: 1.00,
+      store: "La Esquina Verde"
+    },
+    {
+      image: "/api/placeholder/200/250",
+      name: "Pepsi",
+      description: "Bebida gaseosa",
+      price: 1.00,
+      store: "La Esquina Verde"
+    }
+  ];
+
   return (
     <div className="bg-gray-100">
       {/* Navbar */}
@@ -117,6 +141,20 @@ const ProductDetail = () => {
         <h2 className="text-2xl font-bold mb-4">Productos relacionados</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4">
           {/* Productos relacionados se mantienen igual */}
+          {relatedProducts.map((product, index) => (
+            <div key={index} className="border p-4 rounded-lg flex flex-col items-center">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-32 object-contain bg-gray-50 rounded-lg mb-4"
+              />
+              <div className="w-full object-contain rounded-lg mb-4">
+                <h3 className="font-medium text-lg">{product.name}</h3>
+                <p className="text-gray-500 text-sm">{product.description}</p>
+                <p className="text-blue-600 font-bold">${product.price.toFixed(2)}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
