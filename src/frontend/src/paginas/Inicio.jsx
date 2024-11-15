@@ -1,17 +1,21 @@
-// paginas/Inicio.js
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import CategoriaGrid from '../componentes/CategoriaGrid';
-import { Link } from 'react-router-dom';
-import Navbar from '../componentes/Navbar';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import CategoriaGrid from "../componentes/CategoriaGrid";
+import ProductoGrid from "../componentes/ProductoGrid";
+import Navbar from "../componentes/Navbar";
 
 const Inicio = () => {
   const [categorias, setCategorias] = useState([]);
+  const [numeroDeGrids, setNumeroDeGrids] = useState(3); // Establece el número de grids de productos que deseas
 
   useEffect(() => {
-    axios.get('http://localhost:3000/categorias')
-      .then((response) => setCategorias(response.data))
-      .catch((error) => console.error('Error al obtener categorías:', error));
+    // Obtener todas las categorías
+    axios
+      .get("http://localhost:3000/categorias")
+      .then((response) => {
+        setCategorias(response.data);
+      })
+      .catch((error) => console.error("Error al obtener categorías:", error));
   }, []);
 
   return (
@@ -20,16 +24,23 @@ const Inicio = () => {
       <Navbar />
 
       {/* Main content */}
-      <main className="flex-grow flex justify-center items-center bg-gray-100">
-        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-[1100px]">
+      <main className="flex-grow flex flex-col items-center bg-gray-100 py-8">
+        {/* Iteración de ProductoGrid */}
+        {categorias.slice(0, numeroDeGrids).map((categoria) => (
+          <div key={categoria.idCategoria} className="bg-white p-6 rounded-lg shadow-lg w-full max-w-[1100px] mb-8">
+            <ProductoGrid categoria={categoria} />
+          </div>
+        ))}
+
+        {/* Grid de Categorías */}
+        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-[1100px] mb-8">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold text-gray-800">Categorías</h2>
-            <Link to="/categorias" className="text-blue-500 hover:underline">
+            <a href="/categorias" className="text-blue-500 hover:underline">
               Mostrar todas las categorías
-            </Link>
+            </a>
           </div>
 
-          {/* CategoriaGrid */}
           <CategoriaGrid categorias={categorias} />
         </div>
       </main>
