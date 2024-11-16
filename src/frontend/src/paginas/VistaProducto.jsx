@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useLocation} from "react-router-dom";
 import Navbar from "../componentes/Navbar";
 import TarjetaProducto from "../componentes/TarjetaProducto"; // Importar TarjetaProducto
+import { useCart } from "../context/CartContext";
 
 const VistaProducto = () => {
   const [quantity, setQuantity] = useState(1);
@@ -9,6 +10,7 @@ const VistaProducto = () => {
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
   const producto = location.state?.producto;
+  const { addToCart, updateQuantity } = useCart()
 
   useEffect(() => {
     if (producto?.nombre_categoria) {
@@ -53,7 +55,7 @@ const VistaProducto = () => {
   const handleIncrement = () => {
     if (quantity < producto.stock) {
       setQuantity(quantity + 1);
-    }
+    } 
   };
 
   const handleDecrement = () => {
@@ -61,6 +63,13 @@ const VistaProducto = () => {
       setQuantity(quantity - 1);
     }
   };
+
+  const handleAddToCart = () => {
+    addToCart({ ...producto });
+    updateQuantity(producto.producto_id, quantity)
+    setQuantity(1); // Restablecer cantidad a 1 después de agregar
+  };
+  
 
   return (
     <div className="bg-gray-100">
@@ -131,6 +140,7 @@ const VistaProducto = () => {
               <button
                 className={`w-full py-3 rounded-lg font-semibold ${inStock ? "border border-blue-600 text-blue-600 hover:bg-blue-50" : "border border-gray-300 text-gray-500 cursor-not-allowed"}`}
                 disabled={!inStock}
+                onClick={handleAddToCart}
               >
                 Agregar al carrito
               </button>

@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import { useCart } from "../context/CartContext";
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState(''); // Estado para el término de búsqueda
+  const { totalItems } = useCart()
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -76,7 +78,11 @@ const Navbar = () => {
             <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
               <path d="M3 4a1 1 0 011-1h2.23a1 1 0 01.92.61l1.54 3.73h12.21a1 1 0 01.97 1.24l-2.27 9a1 1 0 01-.97.76H7.31l1.54 3.73a1 1 0 01-.92 1.39H4a1 1 0 110-2h2.23l1.54-3.73H5a1 1 0 01-.97-1.24l2.27-9A1 1 0 016.58 6H5a1 1 0 01-1-1V4z"></path>
             </svg>
-            <div className="absolute -top-2 -right-2 bg-red-600 w-5 h-5 rounded-full text-white text-xs flex items-center justify-center">0</div>
+
+            <div className="absolute -top-2 -right-2 bg-red-600 w-5 h-5 rounded-full text-white text-xs flex items-center justify-center">
+             {totalItems}
+            </div>
+
           </Link>
         </nav>
       </div>

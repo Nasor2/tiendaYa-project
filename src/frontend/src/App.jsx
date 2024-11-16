@@ -1,6 +1,7 @@
 // App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { CartProvider } from "./context/CartContext";
 import Login from './paginas/Login';
 import Registro from './paginas/Registro';
 import Inicio from './paginas/Inicio';
@@ -8,10 +9,12 @@ import Footer from './componentes/Footer';
 import Categorias from './paginas/Categorias';
 import ResultadosBusqueda from './paginas/ResultadosBusqueda';
 import VistaProducto from './paginas/VistaProducto';
+import CartPreview from './paginas/Carrito';
 
 function App() {
   return (
-    <Router>
+    <CartProvider>
+      <Router>
       <div className="flex flex-col min-h-screen">
         <div className='flex-1'>
           <Routes>
@@ -21,11 +24,13 @@ function App() {
             <Route path="/buscar" element={<ResultadosBusqueda />} /> 
             <Route path="/categorias" element={<Categorias />} />
             <Route path="/producto/:nombre" element={<VistaProducto />} />
+            <Route path="/cart" element={<CartPreview />} />
           </Routes>
         </div>
         <Footer />
       </div>
     </Router>
+    </CartProvider>
   );
 }
 
