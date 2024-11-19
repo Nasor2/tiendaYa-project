@@ -1,47 +1,42 @@
-// paginas/Registro.js
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import NavbarStatico from '../componentes/NavbarStatico';
+import { AuthContext } from '../context/AuthContext';
 
 const Registro = () => {
+  const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     nombre: '', apellido: '', correo: '', telefono: '', direccion: '', barrio: '', password: '', role: '', tienda: '',
   });
   const [message, setMessage] = useState('');
-  const navigate = useNavigate(); // Usamos useNavigate para redirigir después de registrar
+  const navigate = useNavigate();
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validación del rol
     if (formData.role === '' || formData.role === 'elegir') {
       setMessage('Debe elegir un rol válido: Cliente o Tendero');
       return;
     }
 
     try {
-      // Registrar al usuario
       const response = await axios.post('http://localhost:3000/register', formData);
-      setMessage(response.data.message);
 
       if (response.data.message === 'Registro exitoso') {
-        // Realizar login automáticamente después del registro
         const loginResponse = await axios.post('http://localhost:3000/login', {
           correo: formData.correo,
           password: formData.password,
         });
 
         if (loginResponse.data.token) {
-          // Guardar token y rol en localStorage
-          localStorage.setItem('token', loginResponse.data.token);
-          localStorage.setItem('role', loginResponse.data.role);
-
-          // Redirigir al inicio
-          navigate('/');
+          login(loginResponse.data); // Usa el contexto para iniciar sesión
+          navigate('/'); // Redirige al inicio
         }
+      } else {
+        setMessage(response.data.message);
       }
     } catch (error) {
       setMessage(error.response?.data?.message || 'Error en el registro');
@@ -179,5 +174,7 @@ const Registro = () => {
     </div>
   );
 };
+
+
 
 export default Registro;

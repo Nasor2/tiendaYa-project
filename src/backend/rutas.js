@@ -5,7 +5,6 @@ const authController = require('./controladores/autenticacion');
 const clienteController = require('./controladores/clientes');
 const categoriaController = require('./controladores/categorias');
 const productosController = require('./controladores/productos');
-const verificarToken = require('./middlewares/verificarToken');  // Asegúrate de tener un middleware para verificar el token
 
 // Ruta para obtener todos los clientes
 router.get('/clientes', clienteController.getClientes);
@@ -22,6 +21,7 @@ router.get('/productos', productosController.obtenerProductos);
 
 // Ruta para agregar un nuevo producto (asegúrate de agregar autenticación)
 router.post('/productos/agregar-producto', productosController.agregarProducto);
+router.get('/mis-productos', productosController.rutaProtegida);
 
 router.get('/productos/buscar', productosController.buscarProductos);
 
