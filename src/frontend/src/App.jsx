@@ -10,6 +10,7 @@ import Categorias from './paginas/Categorias';
 import ResultadosBusqueda from './paginas/ResultadosBusqueda';
 import VistaProducto from './paginas/VistaProducto';
 import CartPreview from './paginas/Carrito';
+import MisPedidos from './paginas/MisPedidos';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/categorias" element={<Categorias />} />
             <Route path="/producto/:nombre" element={<VistaProducto />} />
             <Route path="/cart" element={<CartPreview />} />
+            <Route path="/mis-pedidos" element={<MisPedidos />} />
           </Routes>
         </div>
         <Footer />

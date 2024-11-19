@@ -1,12 +1,12 @@
 // src/components/CartPreview.js
-import React, { useContext } from "react";
+import React from "react";
 import { useCart } from "../context/CartContext";
 import { Trash2, Plus, Minus, ArrowLeft } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import Navbar from "../componentes/Navbar";
 
 export default function Carrito() {
-  const { cartItems, setCartItems, totalPrice, updateQuantity, removeItem, cartTotal } = useCart()
+  const { cartItems, totalPrice, updateQuantity, removeItem } = useCart()
   const navigate = useNavigate();
   console.log(cartItems)
 
@@ -47,7 +47,7 @@ export default function Carrito() {
                   cartItems.map((item) => (
                     <div key={item.id} className="p-6 flex items-center gap-4">
                       <img
-                        src={item.image}
+                        src={item.imagen_url}
                         alt={item.nombre}
                         className="w-20 h-20 object-cover rounded-lg"
                       />

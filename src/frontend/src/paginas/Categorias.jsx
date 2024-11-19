@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { ShoppingBag, ChevronRight } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Navbar from "../componentes/Navbar";
 
 const Categorias = () => {
   const [categorias, setCategorias] = useState([]);
@@ -34,22 +36,33 @@ const Categorias = () => {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-4">
-        <h2 className="text-2xl font-bold mb-4 text-center">Categorías</h2>
-        <div className="space-y-4">
+    <div className="bg-gray-100">
+      <Navbar/>
+      <div className="max-w-2xl mx-auto p-6">
+        <div className="flex items-center justify-center mb-6">
+          <ShoppingBag className="w-6 h-6 text-blue-600 mr-2" />
+          <h2 className="text-2xl font-bold text-gray-800">Categorías</h2>
+        </div>
+        <div className="space-y-3">
           {categorias.map((categoria) => (
             <div
               key={categoria.idCategoria}
-              className="flex items-center space-x-4 p-4 border rounded-lg shadow cursor-pointer hover:shadow-lg transition-shadow"
+              className="bg-white rounded-lg shadow hover:shadow-md p-3 cursor-pointer border-gray-200 transition-shadow"
               onClick={() => handleCategoryClick(categoria.nombre_categoria)}
             >
-              <img
-                src={categoria.imagen_url}
-                alt={categoria.nombre_categoria}
-                className="w-16 h-16 object-cover rounded-full"
-              />
-              <span className="text-lg font-medium">{categoria.nombre_categoria}</span>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={`/assets/imagenes-categorias/${categoria.nombre_categoria}.jpg`}
+                    alt={categoria.nombre_categoria}
+                    className="w-12 h-12 object-cover rounded-lg bg-blue-50 p-1"
+                  />
+                  <span className="font-medium text-gray-800">
+                    {categoria.nombre_categoria}
+                  </span>
+                </div>
+                <ChevronRight className="w-5 h-5 text-gray-400" />
+              </div>
             </div>
           ))}
         </div>

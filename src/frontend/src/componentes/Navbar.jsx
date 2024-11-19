@@ -67,6 +67,9 @@ const Navbar = () => {
               {user.role === 'tendero' && (
                 <Link to="/mis-productos" className="hover:underline">Mis productos</Link>
               )}
+              {user.role === 'cliente' && (
+                <Link to="/mis-pedidos" className="hover:underline">Mis pedidos</Link>
+              )}
               <button onClick={handleLogout} className="bg-red-500 text-white py-1 px-3 rounded-full hover:bg-red-600 transition">
                 Cerrar sesión
               </button>

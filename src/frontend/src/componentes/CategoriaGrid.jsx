@@ -50,7 +50,7 @@ const CategoriaGrid = ({ categorias }) => {
             onClick={() => handleCategoryClick(categoria.nombre_categoria)} // Usamos el nombre de la categoría
           >
             <img
-              src={categoria.imagen_url}
+              src={`/assets/imagenes-categorias/${categoria.nombre_categoria}.jpg`}
               alt={categoria.nombre_categoria} // Aseguramos de usar el alt correctamente
               className="w-12 h-12 object-contain mr-4"
             />
