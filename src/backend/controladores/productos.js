@@ -1,6 +1,7 @@
+const { verificarToken } = require('./autenticacion');
 const productoModel = require('../modelos/producto');
 const inventarioModel = require('../modelos/inventario');
-
+const jwt = require('jsonwebtoken');
 // Función para que un tendero agregue un producto a su inventario
 exports.agregarProducto = (req, res) => {
   const { nombre, descripcion, idCategoria, precio, stock, imagen_url } = req.body;
@@ -63,3 +64,20 @@ exports.buscarProductos = (req, res) => {
     res.status(200).json({ productos });
   });
 };
+
+exports.rutaProtegida = [
+  verificarToken(['tendero']), // Middleware para verificar el token y roles permitidos
+  (req, res) => {
+    const { id } = req.user; // Extrae el ID del tendero desde el token decodificado
+    console.log(id)
+    inventarioModel.obtenerInventarioPorTendero(id, (err, productos) => {
+      if (err) {
+        console.error('Error al obtener el inventario del tendero:', err);
+        return res.status(500).json({ message: 'Error al obtener los productos', error: err });
+      }
+
+      // Envía los productos obtenidos al cliente
+      res.json(productos);
+    });
+  }
+];

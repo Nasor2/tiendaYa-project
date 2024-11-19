@@ -5,8 +5,8 @@ const authController = require('./controladores/autenticacion');
 const clienteController = require('./controladores/clientes');
 const categoriaController = require('./controladores/categorias');
 const productosController = require('./controladores/productos');
-const pedidoController = require('./controladores/pedidos');
 const verificarToken = require('./middlewares/verificarToken');  // Asegúrate de tener un middleware para verificar el token
+const pedidoController = require('./controladores/pedidos');
 
 // Ruta para obtener todos los clientes
 router.get('/clientes', clienteController.getClientes);
@@ -26,6 +26,8 @@ router.post('/productos/agregar-producto', productosController.agregarProducto);
 
 // Ruta para obtener pedidos de un cliente
 router.get('/pedidos/:clienteId', pedidoController.obtenerPedidos);
+
+router.get('/mis-productos', productosController.rutaProtegida);
 
 router.get('/productos/buscar', productosController.buscarProductos);
 

@@ -29,7 +29,7 @@ const Filtros = ({ onFilterChange }) => {
   if (error) return <p className="text-center text-red-500">Hubo un error al cargar las categorías: {error}</p>;
 
   return (
-    <aside className="w-full md:w-1/4 lg:w-1/5 p-4 bg-white rounded-lg shadow-md">
+    <aside className="w-full md:w-1/4 lg:w-1/5 p-4 bg-white rounded-lg shadow-md ">
       <h2 className="text-xl font-semibold mb-4 text-gray-800">Filtros</h2>
       <div className="space-y-4">
         {categorias.map((categoria) => (
