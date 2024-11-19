@@ -4,7 +4,7 @@ import NavbarStatico from '../componentes/NavbarStatico';
 import { AuthContext } from '../context/AuthContext';
 
 const Login = () => {
-  const { login } = useContext(AuthContext);
+  const { login } = useContext(AuthContext); // Accede al método login del contexto
   const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -25,14 +25,18 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        login(data); // Usa el contexto para iniciar sesión
-        navigate('/'); // Redirigir al inicio
+        if (data.token && data.role) {
+          login(data); // Guarda el usuario en el contexto
+          navigate('/'); // Redirige al inicio
+        } else {
+          setError('Datos inválidos recibidos del servidor.');
+        }
       } else {
-        setError(data.message); // Mostrar error
+        setError(data.message || 'Correo o contraseña incorrectos.');
       }
     } catch (err) {
-      console.error('Error en el login', err);
-      setError('Error en la conexión al servidor');
+      console.error('Error en el login:', err);
+      setError('Error en la conexión al servidor.');
     }
   };
 
