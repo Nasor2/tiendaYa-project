@@ -5,7 +5,6 @@ const authController = require('./controladores/autenticacion');
 const clienteController = require('./controladores/clientes');
 const categoriaController = require('./controladores/categorias');
 const productosController = require('./controladores/productos');
-const verificarToken = require('./middlewares/verificarToken');  // Asegúrate de tener un middleware para verificar el token
 const pedidoController = require('./controladores/pedidos');
 
 // Ruta para obtener todos los clientes
