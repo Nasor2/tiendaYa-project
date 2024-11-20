@@ -81,3 +81,4 @@ exports.eliminarProductoInventario = ({ idTendero, idProducto }, callback) => {
     callback(null, result);
   });
 };
+

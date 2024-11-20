@@ -1,42 +1,86 @@
-import React, { useContext, useEffect, useState, useCallback } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useContext, useEffect, useState, useCallback } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Navbar from "../componentes/Navbar";
+import ModalEditarProducto from "../componentes/ModalEditarProducto";
+
+// Función auxiliar para obtener encabezados de autorización
+const getAuthHeaders = (token) => ({
+  headers: { Authorization: `Bearer ${token}` },
+});
 
 const MisProductos = () => {
-  const { user } = useContext(AuthContext); // Extraemos solo 'user'
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [productos, setProductos] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Obtener productos
+  // Función para obtener categorías
+  const obtenerCategorias = useCallback(async () => {
+    try {
+      const { data } = await axios.get("http://localhost:3000/categorias");
+      setCategorias(data);
+    } catch (error) {
+      console.error("Error al obtener categorías:", error.response || error);
+    }
+  }, []);
+
+  // Función para obtener productos del tendero
   const obtenerProductos = useCallback(async () => {
     if (!user?.token) {
-      alert('Token no encontrado, por favor inicia sesión');
-      navigate('/login');
+      alert("Token no encontrado, por favor inicia sesión");
+      navigate("/login");
       return;
     }
-
     try {
-      const res = await axios.get('http://localhost:3000/mis-productos', {
-        headers: { Authorization: `Bearer ${user.token}` },
-      });
-      setProductos(res.data);
+      const { data } = await axios.get(
+        "http://localhost:3000/mis-productos",
+        getAuthHeaders(user.token)
+      );
+      setProductos(data);
     } catch (error) {
-      console.error('Error al obtener productos:', error.response || error);
+      console.error("Error al obtener productos:", error.response || error);
     }
   }, [user?.token, navigate]);
 
+  // Manejar edición de producto
+  const handleEditarProducto = (producto) => {
+    setProductoSeleccionado(producto);
+    setIsModalOpen(true);
+  };
+
+  // Guardar producto editado
+  const handleGuardarProducto = async (productoActualizado) => {
+    try {
+      await axios.put(
+        `http://localhost:3000/productos/${productoSeleccionado.producto_id}`,
+        productoActualizado,
+        getAuthHeaders(user.token)
+      );
+      setIsModalOpen(false);
+      obtenerProductos(); // Actualizar la lista de productos
+    } catch (error) {
+      console.error("Error al actualizar el producto:", error.response || error);
+    }
+  };
+
+  // Efecto para cargar datos iniciales
   useEffect(() => {
     if (!user) {
-      navigate('/login');
-    } else if (user.role !== 'tendero') {
-      navigate('/');
+      navigate("/login");
+    } else if (user.role !== "tendero") {
+      navigate("/");
     } else {
       obtenerProductos();
+      obtenerCategorias();
     }
-  }, [user, navigate, obtenerProductos]);
+  }, [user, navigate, obtenerProductos, obtenerCategorias]);
 
-  if (!user) {
+  // Mostrar pantalla de carga si los datos no están listos
+  if (!user || categorias.length === 0) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-50">
         <p className="text-lg font-semibold text-gray-600">Cargando...</p>
@@ -45,46 +89,69 @@ const MisProductos = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Mis Productos</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="flex-grow bg-gray-100 py-8 px-4">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-3xl font-bold text-gray-800 mb-6">Mis Productos</h1>
+
           {productos.length > 0 ? (
-            productos.map((producto) => (
-              <div
-                key={producto.producto_id}
-                className="bg-white shadow-md rounded-lg p-4 flex flex-col justify-between hover:shadow-lg transition-shadow duration-300"
-              >
-                <img
-                  src={producto.imagen_url}
-                  alt={producto.nombre_producto}
-                  className="w-full h-40 object-cover rounded-lg mb-4"
-                />
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-800 truncate mb-2">
-                    {producto.nombre_producto}
-                  </h3>
-                  <p className="text-gray-600 text-sm line-clamp-3 mb-4">{producto.descripcion}</p>
-                  <div className="text-sm text-gray-500 mb-4">
-                    <p><span className="font-bold">Precio:</span> ${producto.precio_venta}</p>
-                    <p><span className="font-bold">Stock:</span> {producto.stock}</p>
-                    <p><span className="font-bold">Categoría:</span> {producto.categoria}</p>
-                  </div>
-                </div>
-                <button
-                  className="w-full py-2 mt-4 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors duration-300"
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {productos.map((producto) => (
+                <div
+                  key={producto.producto_id}
+                  className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300 flex flex-col"
                 >
-                  Editar
-                </button>
-              </div>
-            ))
+                  <div className="aspect-w-1 aspect-h-1 w-full rounded-lg overflow-hidden bg-gray-200">
+                    <img
+                      src={producto.imagen_url}
+                      alt={producto.nombre_producto}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                  <div className="mt-4 flex-1">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2 truncate">
+                      {producto.nombre_producto}
+                    </h3>
+                    <p className="text-gray-600 text-sm line-clamp-3 mb-4">
+                      {producto.descripcion}
+                    </p>
+                    <div className="text-sm text-gray-500 space-y-1">
+                      <p>
+                        <span className="font-bold text-gray-700">Precio:</span> $ {producto.precio_venta}
+                      </p>
+                      <p>
+                        <span className="font-bold text-gray-700">Stock:</span> {producto.stock}
+                      </p>
+                      <p>
+                        <span className="font-bold text-gray-700">Categoría:</span> {producto.categoria}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleEditarProducto(producto)}
+                    className="w-full py-2 mt-4 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors duration-300"
+                  >
+                    Editar
+                  </button>
+                </div>
+              ))}
+            </div>
           ) : (
-            <div className="col-span-full text-center text-gray-600">
-              <p>No tienes productos en tu inventario.</p>
+            <div className="text-center text-gray-600 mt-20">
+              <p className="text-lg">No tienes productos en tu inventario.</p>
             </div>
           )}
         </div>
-      </div>
+      </main>
+
+      <ModalEditarProducto
+        producto={productoSeleccionado}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleGuardarProducto}
+        categorias={categorias}
+      />
     </div>
   );
 };

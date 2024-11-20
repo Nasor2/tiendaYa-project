@@ -30,4 +30,6 @@ router.get('/mis-productos', productosController.rutaProtegida);
 
 router.get('/productos/buscar', productosController.buscarProductos);
 
+router.put('/productos/:idProducto', authController.verificarToken(['tendero']), productosController.editarProducto);
+
 module.exports = router;

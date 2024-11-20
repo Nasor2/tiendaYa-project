@@ -1,7 +1,9 @@
+const connection = require('../db');
 const { verificarToken } = require('./autenticacion');
 const productoModel = require('../modelos/producto');
 const inventarioModel = require('../modelos/inventario');
 const jwt = require('jsonwebtoken');
+
 // Función para que un tendero agregue un producto a su inventario
 exports.agregarProducto = (req, res) => {
   const { nombre, descripcion, idCategoria, precio, stock, imagen_url } = req.body;
@@ -62,6 +64,64 @@ exports.buscarProductos = (req, res) => {
       return res.status(500).json({ message: 'Error al buscar productos' });
     }
     res.status(200).json({ productos });
+  });
+};
+
+exports.editarProducto = (req, res) => {
+  const { idProducto } = req.params;
+  const { nombre, descripcion, idCategoria, precio, stock, imagen_url } = req.body;
+
+  // Verifica si la información del usuario está disponible
+  if (!req.user || !req.user.id) {
+    return res.status(401).json({ message: 'Usuario no autenticado o token inválido' });
+  }
+
+  if (!idProducto || !nombre || !precio || !stock || !idCategoria) {
+    console.log(req.body)
+    return res.status(400).json({ message: 'Faltan datos para actualizar el producto' });
+  }
+
+  const queryProducto = `
+    UPDATE productos
+    SET nombre = ?, descripcion = ?, categoria_id = ?, imagen_url = ?
+    WHERE producto_id = ?
+  `;
+
+  const queryInventario = `
+    UPDATE inventario_tendero
+    SET precio_venta = ?, stock = ?, ultima_actualizacion = NOW()
+    WHERE producto_id = ? AND tendero_id = ?
+  `;
+
+  connection.beginTransaction((err) => {
+    if (err) return res.status(500).json({ message: 'Error iniciando transacción', error: err });
+
+    // Actualizar la tabla productos
+    connection.query(queryProducto, [nombre, descripcion, idCategoria, imagen_url, idProducto], (err) => {
+      if (err) {
+        return connection.rollback(() => {
+          res.status(500).json({ message: 'Error actualizando producto', error: err });
+        });
+      }
+
+      // Actualizar inventario
+      connection.query(queryInventario, [precio, stock, idProducto, req.user.id], (err) => {
+        if (err) {
+          return connection.rollback(() => {
+            res.status(500).json({ message: 'Error actualizando inventario', error: err });
+          });
+        }
+
+        connection.commit((err) => {
+          if (err) {
+            return connection.rollback(() => {
+              res.status(500).json({ message: 'Error finalizando transacción', error: err });
+            });
+          }
+          res.status(200).json({ message: 'Producto actualizado exitosamente' });
+        });
+      });
+    });
   });
 };
 
