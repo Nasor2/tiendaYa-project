@@ -3,17 +3,16 @@
 const db = require('../db'); // Aquí puedes importar tu configuración de la base de datos
 
 // Función para agregar un producto al inventario de un tendero
-exports.agregarInventarioTendero = ({ idTendero, idProducto, precio, stock }, callback) => {
+exports.agregarInventarioTendero = ({ idTendero, idProducto, stock, precio}, callback) => {
   const query = `
-    INSERT INTO inventario_tendero (id_tendero, id_producto, precio_venta, stock, ultima_actualizacion)
-    VALUES (?, ?, ?, ?, NOW())
+    INSERT INTO inventario_tendero (tendero_id, producto_id, stock, precio_venta)
+    VALUES (?, ?, ?, ?)
     ON DUPLICATE KEY UPDATE 
       precio_venta = VALUES(precio_venta), 
-      stock = VALUES(stock),
-      ultima_actualizacion = NOW();
+      stock = VALUES(stock);
   `;
   
-  const values = [idTendero, idProducto, precio, stock];
+  const values = [idTendero, idProducto, stock, precio];
   
   db.query(query, values, (err, result) => {
     if (err) return callback(err);

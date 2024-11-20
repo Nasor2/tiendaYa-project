@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import UploadImage from '../componentes/UploadImage';
+import Cloudinary from '../componentes/Cloudinary';
 import axios from 'axios';
+
+// Función auxiliar para obtener encabezados de autorización
+const getAuthHeaders = (token) => ({
+  headers: { Authorization: `Bearer ${token}` },
+});
 
 const AddProducto = ({ visible, onClose }) => {
   const [categorias, setCategorias] = useState([]);
@@ -57,7 +62,7 @@ const AddProducto = ({ visible, onClose }) => {
     try {
       await axios.post(
         'http://localhost:3000/productos/agregar-producto',
-        { ...formData },
+        {nombre, descripcion, idCategoria, precio, stock, imagen_url},
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
       alert('Producto agregado exitosamente');
@@ -143,7 +148,12 @@ const AddProducto = ({ visible, onClose }) => {
           </div>
 
           <div>
-            <UploadImage onUpload={(url) => setFormData({ ...formData, imagen_url: url })} />
+            <Cloudinary
+            currentImageUrl={formData.imagen_url}
+            onImageUpload={(url) =>
+              setFormData((prev) => ({ ...formData, imagen_url: url }))
+            }
+          />
           </div>
 
           <div className="space-y-2">

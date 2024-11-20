@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../componentes/Navbar";
 import ModalEditarProducto from "../componentes/ModalEditarProducto";
+import AddProducto from "../componentes/AddProducto";
 
 // Función auxiliar para obtener encabezados de autorización
 const getAuthHeaders = (token) => ({
@@ -17,6 +18,7 @@ const MisProductos = () => {
   const [categorias, setCategorias] = useState([]);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [ventanaVisible, setVentanaVisible] = useState(false);
 
   // Función para obtener categorías
   const obtenerCategorias = useCallback(async () => {
@@ -93,7 +95,19 @@ const MisProductos = () => {
       <Navbar />
       <main className="flex-grow bg-gray-100 py-8 px-4">
         <div className="max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-6"> 
           <h1 className="text-3xl font-bold text-gray-800 mb-6">Mis Productos</h1>
+          <button
+            onClick={() => setVentanaVisible(true)}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300" 
+          >
+            Agregar Producto
+          </button>
+          <AddProducto
+            visible={ventanaVisible}
+            onClose={() => setVentanaVisible(false)}
+          />
+        </div>
 
           {productos.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">

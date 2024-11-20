@@ -6,19 +6,24 @@ const jwt = require('jsonwebtoken');
 
 // Función para que un tendero agregue un producto a su inventario
 exports.agregarProducto = (req, res) => {
+  // Asegúrate de que req.user esté presente
+  if (!req.user) {
+    return res.status(401).json({ message: 'No se encontró usuario autenticado' });
+  }
+
+  // Verificar que el usuario tenga el rol 'tendero'
+  if (req.user.role !== 'tendero') {
+    return res.status(403).json({ message: 'No tienes permisos para agregar productos' });
+  }
+
   const { nombre, descripcion, idCategoria, precio, stock, imagen_url } = req.body;
 
   if (!nombre || !descripcion || !idCategoria || !precio || !stock) {
     return res.status(400).json({ message: 'Faltan datos en la solicitud' });
   }
 
-  // Verificar que el usuario sea un tendero
-  if (req.user.role !== 'tendero') {
-    return res.status(403).json({ message: 'No tienes permisos para agregar productos' });
-  }
-
   // Crear o buscar el producto en la tabla de productos
-  productoModel.addProducto({ nombre, descripcion, idCategoria, imagen_url }, (err, productoId) => {
+  productoModel.addProducto({ nombre, descripcion, imagen_url, idCategoria }, (err, productoId) => {
     if (err) {
       console.error('Error al agregar producto:', err);
       return res.status(500).json({ message: 'Error al agregar producto' });
@@ -28,8 +33,8 @@ exports.agregarProducto = (req, res) => {
     inventarioModel.agregarInventarioTendero({
       idTendero: req.user.id,  // ID del tendero autenticado
       idProducto: productoId,
-      precio,
-      stock
+      stock,
+      precio
     }, (err) => {
       if (err) {
         console.error('Error al agregar inventario:', err);
