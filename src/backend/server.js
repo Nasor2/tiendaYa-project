@@ -9,7 +9,8 @@ const authRoutes = require('./rutas');  // Rutas de autenticación
 const cors = require('cors');
 app.use(cors({
   origin: 'http://localhost:3001', // Permitir el origen específico
-  methods: ['GET', 'POST'],        // Métodos permitidos
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],  
+  allowedHeaders: ['Content-Type', 'Authorization'],      // Métodos permitidos
   credentials: true                // Permitir credenciales si es necesario
 }));
 
