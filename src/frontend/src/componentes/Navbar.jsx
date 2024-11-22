@@ -94,14 +94,17 @@ const Navbar = () => {
             </>
           )}
           {/* Carrito de compras */}
-          <Link to="/cart" className="relative text-gray-500 dark:text-gray-200 hover:opacity-80">
-            <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M3 4a1 1 0 011-1h2.23a1 1 0 01.92.61l1.54 3.73h12.21a1 1 0 01.97 1.24l-2.27 9a1 1 0 01-.97.76H7.31l1.54 3.73a1 1 0 01-.92 1.39H4a1 1 0 110-2h2.23l1.54-3.73H5a1 1 0 01-.97-1.24l2.27-9A1 1 0 016.58 6H5a1 1 0 01-1-1V4z"></path>
-            </svg>
-            <div className="absolute -top-2 -right-2 bg-red-600 w-5 h-5 rounded-full text-white text-xs flex items-center justify-center">
-              {totalItems}
-            </div>
-          </Link>
+          {(!user || user.role === "cliente") && (
+            <Link to="/cart" className="relative text-gray-500 dark:text-gray-200 hover:opacity-80">
+              <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 4a1 1 0 011-1h2.23a1 1 0 01.92.61l1.54 3.73h12.21a1 1 0 01.97 1.24l-2.27 9a1 1 0 01-.97.76H7.31l1.54 3.73a1 1 0 01-.92 1.39H4a1 1 0 110-2h2.23l1.54-3.73H5a1 1 0 01-.97-1.24l2.27-9A1 1 0 016.58 6H5a1 1 0 01-1-1V4z"></path>
+              </svg>
+              <div className="absolute -top-2 -right-2 bg-red-600 w-5 h-5 rounded-full text-white text-xs flex items-center justify-center">
+                {totalItems}
+              </div>
+            </Link>
+          )}
+          
         </nav>
       </div>
     </header>
