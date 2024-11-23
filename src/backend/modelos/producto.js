@@ -1,13 +1,13 @@
 const connection = require('../db');
 
 // Función para agregar un nuevo producto
-const addProducto = ({ nombre, descripcion, idCategoria }, callback) => {
+const addProducto = ({ nombre, descripcion, imagen_url, idCategoria }, callback) => {
   const query = `
-    INSERT INTO productos (nombre, descripcion, categoria_id, fecha_creacion)
-    VALUES (?, ?, ?, NOW())
+    INSERT INTO productos (nombre, descripcion, imagen_url, categoria_id)
+    VALUES (?, ?, ?, ?)
   `;
 
-  connection.query(query, [nombre, descripcion, idCategoria], (err, result) => {
+  connection.query(query, [nombre, descripcion, imagen_url, idCategoria], (err, result) => {
     if (err) {
       console.error('Error al agregar producto:', err);
       return callback(err);

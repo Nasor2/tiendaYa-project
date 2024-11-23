@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../componentes/Navbar";
 import TarjetaProducto from "../componentes/TarjetaProducto";
 import { useCart } from "../context/CartContext";
 import {  ArrowLeft } from "lucide-react";
 import { Store} from "lucide-react";
+import { AuthContext } from "../context/AuthContext";
 
 const VistaProducto = () => {
   const [quantity, setQuantity] = useState(1);
@@ -14,8 +15,15 @@ const VistaProducto = () => {
   const location = useLocation();
   const producto = location.state?.producto;
   const { addToCart, updateQuantity } = useCart();
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    } else if (user.role !== "cliente") {
+      navigate("/");
+    } 
     if (producto?.nombre_categoria) {
       const fetchRelatedProducts = async () => {
         try {
@@ -38,7 +46,7 @@ const VistaProducto = () => {
     } else {
       setIsLoading(false);
     }
-  }, [producto?.nombre_categoria]);
+  }, [producto?.nombre_categoria, user, navigate]);
 
   if (!producto) {
     return (
