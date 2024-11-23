@@ -97,6 +97,7 @@ export default function Carrito() {
                           <button
                             className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors duration-200"
                             onClick={() => updateQuantity(item.producto_id, +1)}
+                            disabled={item.quantity === item.stock}
                           >
                             <Plus className="h-4 w-4 text-gray-600" />
                           </button>
