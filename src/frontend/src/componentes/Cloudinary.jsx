@@ -46,14 +46,6 @@ const Cloudinary = ({ currentImageUrl, onImageUpload }) => {
             className="sr-only"
           />
         </label>
-
-        {loading ? (
-          <h3>Loading...</h3>
-        ) : (
-          <div className="ml-4 flex items-center">
-            {image && <img src={image} alt="Imagen subida" className="h-16 w-16 object-cover rounded-md" />}
-          </div>
-        )}
       </div>
     </div>
   );
