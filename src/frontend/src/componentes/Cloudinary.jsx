@@ -4,8 +4,8 @@ const Cloudinary = ({ currentImageUrl, onImageUpload }) => {
   const preset_name = "ml_default";  // Usar el preset adecuado
   const cloud_name = "desfkvrfo";  // Reemplazar con tu cloud_name
 
-  const [setImage] = useState(currentImageUrl || '');  // Usa la imagen inicial si la hay
-  const [setLoading] = useState(false);
+  const [image, setImage] = useState(currentImageUrl || '');  // Usa la imagen inicial si la hay
+  const [loading, setLoading] = useState(false);
 
   const uploadImage = async (e) => {
     const files = e.target.files;

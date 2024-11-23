@@ -102,7 +102,7 @@ const MisProductos = () => {
             
             {/* Nuevo botón Agregar Producto */}
             <button
-              onClick={() => {}}
+              onClick={() => setVentanaVisible(true)}
               className="inline-flex items-center px-8 py-4 bg-white text-purple-600 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-105 hover:bg-purple-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
             >
               <svg
@@ -119,6 +119,7 @@ const MisProductos = () => {
                   d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                 />
               </svg>
+              
               Agregar Nuevo Producto
             </button>
           </div>
@@ -128,13 +129,6 @@ const MisProductos = () => {
       <main className="flex-grow py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6"> 
-          <h1 className="text-3xl font-bold text-gray-800 mb-6">Mis Productos</h1>
-          <button
-            onClick={() => setVentanaVisible(true)}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300" 
-          >
-            Agregar Producto
-          </button>
           <AddProducto
             visible={ventanaVisible}
             onClose={() => setVentanaVisible(false)}

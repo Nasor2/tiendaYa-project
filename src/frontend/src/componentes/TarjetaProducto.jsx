@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Store} from "lucide-react";
+import { Store } from "lucide-react";
 
 const TarjetaProducto = ({ producto }) => {
   // Función para formatear precio
@@ -23,27 +23,25 @@ const TarjetaProducto = ({ producto }) => {
     <Link
       to={`/producto/${encodeURIComponent(producto.nombre)}`}
       state={{ producto }}
-      className="group bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col w-72"
+      className="group bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 flex flex-col w-72"
     >
-      {/* Contenedor de imagen con overlay */}
-      <div className="relative overflow-hidden h-48">
-        {/* Badge de descuento si existe */}
-        {producto.descuento && (
-          <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold z-10">
-            {producto.descuento}% OFF
+      {/* Contenedor de imagen */}
+      <div className="relative overflow-hidden h-48 rounded-t-2xl">
+        
+        {/* Badge de stock si es bajo */}
+        {producto.stock <= 5 && (
+          <div className="absolute top-3 right-3 bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-medium z-10">
+            ¡Últimas unidades!
           </div>
         )}
-        
 
-        {/* Imagen principal con efecto hover */}
-        <div className="relative h-full w-full">
+        {/* Imagen principal con efecto hover suave */}
+        <div className="relative h-full w-full p-4">
           <img
             src={producto.imagen_url}
             alt={producto.nombre}
-            className="w-full h-full object-contain transform transition-transform duration-500 group-hover:scale-110"
+            className="w-full h-full object-contain transform transition-transform duration-300 group-hover:scale-105"
           />
-          {/* Overlay gradiente */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
       </div>
 
@@ -51,30 +49,49 @@ const TarjetaProducto = ({ producto }) => {
       <div className="flex-1 p-4 flex flex-col">
 
         {/* Nombre del producto */}
-        <h3 className="text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition-colors mb-1">
+        <h3 className="text-lg font-medium text-gray-800 mb-1 transition-colors duration-200 group-hover:text-purple-600">
           {truncateText(producto.nombre, 40)}
         </h3>
 
         {/* Descripción */}
-        <p className="text-sm text-gray-500 mb-3">
+        <p className="text-sm text-gray-500 mb-4">
           {truncateText(producto.descripcion, 60)}
         </p>
 
-        
-        {/* Precio y tienda */}
-        <div className="mt-auto">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-xl font-bold text-gray-900">
+        {/* Precio y calificación */}
+        <div className="mt-auto space-y-3">
+          {/* Precios */}
+          <div className="flex items-center space-x-2">
+            <span className="text-xl font-bold text-gray-900">
               {formatPrice(producto.precio_venta)}
-            </p>
+            </span>
           </div>
 
-          {/* Información de la tienda */}
-          <div className="flex items-center space-x-2 pt-2 border-t">
-            <Store className="w-4 h-4 text-gray-400" />
-            <span className="text-sm text-gray-600">
-              {truncateText(producto.nombre_tienda, 25)}
-            </span>
+          {/* Separador */}
+          <div className="border-t border-gray-100" />
+
+          {/* Footer con tienda y stock */}
+          <div className="flex items-center justify-between pt-2">
+            {/* Información de la tienda */}
+            <div className="flex items-center space-x-2">
+              <Store className="w-4 h-4 text-gray-400" />
+              <span className="text-sm text-gray-600">
+                {truncateText(producto.nombre_tienda, 20)}
+              </span>
+            </div>
+
+            {/* Indicador de stock */}
+            <div className="text-sm">
+              {producto.stock > 0 ? (
+                <span className="text-green-600 font-medium">
+                  Disponible
+                </span>
+              ) : (
+                <span className="text-red-600 font-medium">
+                  Agotado
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </div>
