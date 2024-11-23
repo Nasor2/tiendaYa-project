@@ -93,6 +93,8 @@ exports.loginUser = async (req, res) => {
       return res.json({
         token,
         role: 'cliente',
+        nombre: user.nombre + " " + user.apellido,
+        correo: user.correo,
         message: 'Inicio de sesión exitoso',
       });
     }
