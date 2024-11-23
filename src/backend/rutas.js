@@ -23,8 +23,10 @@ router.get('/productos', productosController.obtenerProductos);
 // Ruta para agregar un nuevo producto (asegúrate de agregar autenticación)
 router.post('/productos/agregar-producto', authController.verificarToken(['tendero']), productosController.agregarProducto);
 
-// Ruta para obtener pedidos de un cliente
-router.get('/pedidos/:clienteId', pedidoController.obtenerPedidos);
+// Rutas para pedidos
+router.get('/pedidos', authController.verificarToken(['cliente']), pedidoController.obtenerDetallesPedidosPorCliente);
+
+//router.get('/pedidos/:idPedido', authController.verificarToken(['cliente']), pedidoController.obtenerDetallePedido);
 
 router.get('/mis-productos', productosController.rutaProtegida);
 
