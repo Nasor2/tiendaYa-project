@@ -1,17 +1,15 @@
-// ResultadosBusqueda.js
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Filtros from "../componentes/Filtros";
 import Navbar from "../componentes/Navbar";
-import TarjetaProducto from "../componentes/TarjetaProducto"; // Importar el componente de tarjeta de producto
+import TarjetaProducto from "../componentes/TarjetaProducto";
 
 const ResultadosBusqueda = () => {
   const [productos, setProductos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
-  const query = new URLSearchParams(location.search).get("q"); // El 'q' es el término de búsqueda
+  const query = new URLSearchParams(location.search).get("q");
 
-  // Obtener productos según el término de búsqueda o la categoría seleccionada
   useEffect(() => {
     const fetchProductos = async () => {
       try {
@@ -36,24 +34,70 @@ const ResultadosBusqueda = () => {
     window.location.href = `/buscar?q=${categoria}`;
   };
 
-  if (isLoading) return <p>Cargando...</p>;
+  if (isLoading) return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center">
+      <div className="bg-white p-8 rounded-2xl shadow-xl">
+        <p className="text-lg text-gray-600">Cargando resultados...</p>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="flex flex-col bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <Navbar />
-      <div className="flex flex-1 px-4 py-4 mx-auto max-w-screen-xl space-x-4">
-        <Filtros onFilterChange={handleFilterChange} />
-        <section className="flex-1 pl-4">
-          <h2 className="text-2xl font-semibold mb-6 text-gray-800">
-            Resultados para "{query}"
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 ">
-            {productos.map((producto) => (
-              <TarjetaProducto key={producto.id} producto={producto}/>
-            ))}
+      
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">
+              Resultados de Búsqueda
+            </h1>
+            <p className="text-lg text-purple-100">
+              Mostrando resultados para "{query}"
+            </p>
           </div>
-        </section>
+        </div>
       </div>
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* Filtros Section */}
+          <div className="md:w-64">
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden sticky top-8">
+              <div className="bg-gradient-to-r from-purple-500 to-blue-500 p-4">
+                <h2 className="text-xl font-bold text-white">Filtros</h2>
+              </div>
+              <div className="p-4">
+                <Filtros onFilterChange={handleFilterChange} />
+              </div>
+            </div>
+          </div>
+
+          {/* Results Section */}
+          <div className="flex-1">
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+              <div className="p-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {productos.length > 0 ? (
+                    productos.map((producto) => (
+                      <div key={producto.id} className="transform transition-all duration-300 hover:scale-[1.02]">
+                        <TarjetaProducto producto={producto} />
+                      </div>
+                    ))
+                  ) : (
+                    <div className="col-span-full text-center py-8">
+                      <p className="text-gray-600 text-lg">
+                        No se encontraron productos para "{query}"
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };

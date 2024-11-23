@@ -1,109 +1,207 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
-import {jwtDecode} from 'jwt-decode';
-import { useCart } from '../context/CartContext';
-import { AuthContext } from '../context/AuthContext';
+import React, { useState, useEffect, useContext } from "react";
+import { Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import { useCart } from "../context/CartContext";
+import { AuthContext } from "../context/AuthContext";
+import { Menu, X, Search, ShoppingCart, User } from "lucide-react";
 
 const Navbar = () => {
-  const { user, setUser, logout } = useContext(AuthContext); // Accede a las funciones del contexto
-  const [searchTerm, setSearchTerm] = useState('');
-  const { totalItems } = useCart(); // Obtener el total de items en el carrito
+  const { user, setUser, logout } = useContext(AuthContext);
+  const [searchTerm, setSearchTerm] = useState("");
+  const { totalItems } = useCart();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token'); // Verifica si hay un token en localStorage
+    const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decodedToken = jwtDecode(token); // Decodifica el token
-        setUser(decodedToken); // Establece el usuario en el contexto global
+        const decodedToken = jwtDecode(token);
+        setUser(decodedToken);
       } catch (error) {
-        console.error('Token inválido:', error);
-        setUser(null); // Limpia el usuario si el token es inválido
+        console.error("Token inválido:", error);
+        setUser(null);
       }
     }
   }, [setUser]);
 
   const handleSearch = (e) => {
-    if (e.key === 'Enter') {
-      window.location.href = `/buscar?q=${searchTerm}`; // Redirige a la búsqueda
-      setSearchTerm(''); // Limpia el campo de búsqueda
+    if (e.key === "Enter") {
+      window.location.href = `/buscar?q=${searchTerm}`;
+      setSearchTerm("");
     }
   };
 
   const handleLogout = () => {
-    logout(); // Usa la función de logout del contexto
+    logout();
+    setIsMenuOpen(false);
   };
 
   return (
-    <header className="bg-white dark:bg-gray-800 shadow-lg sticky top-0 z-10 font-sans">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        {/* Logo */}
-        <Link to="/" className="text-4xl font-bold text-blue-600 dark:text-white">
-          TiendaYa
-        </Link>
+    <header className="bg-white backdrop-blur-md bg-opacity-80 shadow-lg sticky top-0 z-50 font-sans">
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex items-center justify-between">
+          {/* Logo */}
+          <Link
+            to="/"
+            className="text-3xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:from-purple-600 hover:to-blue-600 transition-all duration-300"
+          >
+            TiendaYa
+          </Link>
 
-        {/* Barra de búsqueda */}
-        <div className="hidden lg:flex items-center w-full max-w-lg mx-auto relative">
-          <input
-            type="text"
-            placeholder="Buscar productos, categorías..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={handleSearch}
-            className="w-full pl-12 pr-4 py-3 border rounded-full text-gray-700 dark:text-white dark:bg-gray-700 border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600 shadow-md"
-          />
-          <div className="absolute left-4 text-gray-400 dark:text-gray-300">
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M11 2a9 9 0 016.32 15.49l4.23 4.23a1 1 0 01-1.42 1.42l-4.23-4.23A9 9 0 1111 2zm0 2a7 7 0 100 14 7 7 0 000-14z"></path>
-            </svg>
+          {/* Barra de búsqueda - Desktop */}
+          <div className="hidden lg:flex flex-1 max-w-xl mx-8">
+            <div
+              className={`relative w-full transition-all duration-300 ${isSearchFocused ? "scale-105" : ""}`}
+            >
+              <input
+                type="text"
+                placeholder="Buscar productos, categorías..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleSearch}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setIsSearchFocused(false)}
+                className="w-full pl-12 pr-4 py-2.5 border-2 rounded-full text-gray-700 bg-gray-50 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all duration-300"
+              />
+              <Search className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            </div>
           </div>
+
+          {/* Navegación - Desktop */}
+          <nav className="hidden lg:flex items-center space-x-6">
+            <Link to="/categorias" className="nav-link">
+              Categorías
+            </Link>
+
+            {!user ? (
+              <>
+                <Link to="/register" className="nav-link">
+                  Crea tu cuenta
+                </Link>
+                <Link
+                  to="/login"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors duration-300 flex items-center space-x-2"
+                >
+                  <User className="w-4 h-4" />
+                  <span>Ingresa</span>
+                </Link>
+              </>
+            ) : (
+              <>
+                {user.role === "tendero" && (
+                  <Link to="/mis-productos" className="nav-link">
+                    Mis productos
+                  </Link>
+                )}
+
+                {user.role === "cliente" && (
+                  <>
+                    <Link to="/mis-pedidos" className="nav-link">
+                      Mis pedidos
+                    </Link>
+
+                    {/* Mostrar carrito solo si el rol es cliente */}
+                    <Link
+                      to="/cart"
+                      className="relative p-2 hover:bg-gray-100 rounded-full transition-colors duration-300"
+                    >
+                      <ShoppingCart className="w-6 h-6 text-gray-700" />
+                      {totalItems > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-red-500 text-white w-5 h-5 rounded-full text-xs flex items-center justify-center animate-bounce">
+                          {totalItems}
+                        </span>
+                      )}
+                    </Link>
+                  </>
+                )}
+
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition-colors duration-300"
+                >
+                  Cerrar sesión
+                </button>
+              </>
+            )}
+          </nav>
+
+          {/* Menú móvil */}
+          <button
+            className="lg:hidden p-2 hover:bg-gray-100 rounded-full transition-colors duration-300"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
+          </button>
         </div>
 
-        {/* Opciones de navegación */}
-        <nav className="flex items-center space-x-6 text-gray-700 dark:text-gray-200">
-          <Link to="/categorias" className="hover:underline">
-            Categorías
-          </Link>
-          {!user ? (
-            // Opciones para usuarios no autenticados
-            <>
-              <Link to="/register" className="hover:underline">
-                Crea tu cuenta
-              </Link>
-              <Link to="/login" className="hover:underline">
-                Ingresa
-              </Link>
-            </>
-          ) : (
-            // Opciones para usuarios autenticados
-            <>
-              {user.role === 'tendero' && (
-                <Link to="/mis-productos" className="hover:underline">
-                  Mis productos
-                </Link>
-              )}
-              {user.role === 'cliente' && (
-                <Link to="/mis-pedidos" className="hover:underline">Mis pedidos</Link>
-              )}
-
-              <button 
-                onClick={handleLogout}
-                className="bg-red-500 text-white py-1 px-3 rounded-full hover:bg-red-600 transition"
-              >
-                Cerrar sesión
-              </button>
-            </>
-          )}
-          {/* Carrito de compras */}
-          <Link to="/cart" className="relative text-gray-500 dark:text-gray-200 hover:opacity-80">
-            <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M3 4a1 1 0 011-1h2.23a1 1 0 01.92.61l1.54 3.73h12.21a1 1 0 01.97 1.24l-2.27 9a1 1 0 01-.97.76H7.31l1.54 3.73a1 1 0 01-.92 1.39H4a1 1 0 110-2h2.23l1.54-3.73H5a1 1 0 01-.97-1.24l2.27-9A1 1 0 016.58 6H5a1 1 0 01-1-1V4z"></path>
-            </svg>
-            <div className="absolute -top-2 -right-2 bg-red-600 w-5 h-5 rounded-full text-white text-xs flex items-center justify-center">
-              {totalItems}
+        {/* Menú móvil desplegable */}
+        {isMenuOpen && (
+          <div className="lg:hidden absolute top-full left-0 right-0 bg-white shadow-lg p-4 space-y-4 border-t">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Buscar productos..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleSearch}
+                className="w-full pl-10 pr-4 py-2 border rounded-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             </div>
-          </Link>
-        </nav>
+
+            <nav className="flex flex-col space-y-4">
+              <Link to="/categorias" className="mobile-nav-link">
+                Categorías
+              </Link>
+
+              {!user ? (
+                <>
+                  <Link to="/register" className="mobile-nav-link">
+                    Crea tu cuenta
+                  </Link>
+                  <Link to="/login" className="mobile-nav-link">
+                    Ingresa
+                  </Link>
+                </>
+              ) : (
+                <>
+                  {user.role === "tendero" && (
+                    <Link to="/mis-productos" className="mobile-nav-link">
+                      Mis productos
+                    </Link>
+                  )}
+                  {user.role === "cliente" && (
+                    <Link to="/mis-pedidos" className="mobile-nav-link">
+                      Mis pedidos
+                    </Link>
+                  )}
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left text-red-500 hover:text-red-600 py-2"
+                  >
+                    Cerrar sesión
+                  </button>
+                </>
+              )}
+            </nav>
+          </div>
+        )}
       </div>
+
+      <style jsx>{`
+        .nav-link {
+          @apply text-gray-600 hover:text-blue-600 transition-colors duration-300;
+        }
+
+        .mobile-nav-link {
+          @apply text-gray-600 hover:text-blue-600 py-2 transition-colors duration-300;
+        }
+      `}</style>
     </header>
   );
 };

@@ -1,19 +1,30 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
-const NavbarStatico = () => {
+const NavBarStatico = () => {
   return (
-    <header className="bg-white dark:bg-gray-800 shadow-lg sticky top-0 z-10 font-sans">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        
+    <header className="bg-white backdrop-blur-md bg-opacity-80 shadow-lg sticky top-0 z-50 font-sans">
+      <div className="container mx-auto px-4 py-4 flex items-center justify-between h-16">
         {/* Logo */}
-        <Link to="/" className="text-4xl font-bold text-blue-600 dark:text-white">
+        <Link
+          to="/"
+          className="text-3xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:from-purple-600 hover:to-blue-600 transition-all duration-300"
+        >
           TiendaYa
         </Link>
-        
       </div>
+
+      <style jsx>{`
+        .nav-link {
+          @apply text-gray-600 hover:text-blue-600 transition-colors duration-300;
+        }
+
+        .mobile-nav-link {
+          @apply text-gray-600 hover:text-blue-600 py-2 transition-colors duration-300;
+        }
+      `}</style>
     </header>
   );
 };
 
-export default NavbarStatico;
+export default NavBarStatico;

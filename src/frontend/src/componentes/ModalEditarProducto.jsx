@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Cloudinary from './Cloudinary'; // Asegúrate de importar el componente Cloudinary
+import { PencilIcon, XIcon, CameraIcon, SaveIcon } from 'lucide-react';
+import Cloudinary from './Cloudinary';
 
 const ModalEditarProducto = ({ producto, isOpen, onClose, onSave, categorias }) => {
   const [productoEditado, setProductoEditado] = useState({
@@ -12,7 +13,6 @@ const ModalEditarProducto = ({ producto, isOpen, onClose, onSave, categorias }) 
   });
   const [error, setError] = useState(null);
 
-  // Cargar los datos del producto seleccionado al abrir el modal
   useEffect(() => {
     if (producto) {
       setProductoEditado({
@@ -26,7 +26,6 @@ const ModalEditarProducto = ({ producto, isOpen, onClose, onSave, categorias }) 
     }
   }, [producto]);
 
-  // Manejo de cambios en los inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProductoEditado((prevState) => ({
@@ -35,7 +34,6 @@ const ModalEditarProducto = ({ producto, isOpen, onClose, onSave, categorias }) 
     }));
   };
 
-  // Manejo de guardar el producto editado
   const handleGuardar = () => {
     if (!productoEditado.nombre_producto || !productoEditado.precio_venta || !productoEditado.stock || !productoEditado.categoria_id) {
       setError('Todos los campos son obligatorios.');
@@ -51,118 +49,176 @@ const ModalEditarProducto = ({ producto, isOpen, onClose, onSave, categorias }) 
       imagen_url: productoEditado.imagen_url,
     };
 
-    onSave(productoData); // Guardar los cambios
-    onClose(); // Cerrar el modal
+    onSave(productoData);
+    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Editar Producto</h2>
-
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-
-        <div className="mb-6">
-          <label htmlFor="nombre_producto" className="block text-sm font-medium text-gray-700">Nombre del Producto</label>
-          <input
-            type="text"
-            id="nombre_producto"
-            name="nombre_producto"
-            value={productoEditado.nombre_producto}
-            onChange={handleChange}
-            className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="mb-6">
-          <label htmlFor="descripcion" className="block text-sm font-medium text-gray-700">Descripción</label>
-          <textarea
-            id="descripcion"
-            name="descripcion"
-            value={productoEditado.descripcion}
-            onChange={handleChange}
-            className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="mb-6">
-          <label htmlFor="precio_venta" className="block text-sm font-medium text-gray-700">Precio</label>
-          <input
-            type="number"
-            id="precio_venta"
-            name="precio_venta"
-            value={productoEditado.precio_venta}
-            onChange={handleChange}
-            className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="mb-6">
-          <label htmlFor="stock" className="block text-sm font-medium text-gray-700">Stock</label>
-          <input
-            type="number"
-            id="stock"
-            name="stock"
-            value={productoEditado.stock}
-            onChange={handleChange}
-            className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="mb-6">
-          <label htmlFor="categoria_id" className="block text-sm font-medium text-gray-700">Categoría</label>
-          <select
-            id="categoria_id"
-            name="categoria_id"
-            value={productoEditado.categoria_id}
-            onChange={handleChange}
-            className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500"
-          >
-            <option value="">Seleccionar Categoría</option>
-            {categorias.map((categoria) => (
-              <option key={categoria.categoria_id} value={categoria.categoria_id}>
-                {categoria.nombre_categoria}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Imagen actual del producto */}
-        {productoEditado.imagen_url && (
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700">Imagen Actual</label>
-            <div className="w-full h-64 bg-gray-200 flex justify-center items-center">
-              <img src={productoEditado.imagen_url} alt="Imagen del producto" className="max-h-full max-w-full object-contain" />
-            </div>
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div 
+        className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden transform transition-all duration-300"
+      >
+        {/* Header */}
+        <div className="relative bg-gradient-to-r from-purple-600 to-blue-600 p-6">
+          <div className="flex items-center space-x-3">
+            <PencilIcon className="w-6 h-6 text-white" />
+            <h2 className="text-2xl font-bold text-white">Editar Producto</h2>
           </div>
-        )}
-
-        {/* Subir nueva imagen */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700">Cambiar Imagen</label>
-          <Cloudinary
-            currentImageUrl={productoEditado.imagen_url}
-            onImageUpload={(url) =>
-              setProductoEditado((prev) => ({ ...prev, imagen_url: url }))
-            }
-          />
-        </div>
-
-        <div className="flex justify-between items-center">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+            className="absolute top-6 right-6 text-white/80 hover:text-white transition-colors duration-200"
           >
-            Cancelar
+            <XIcon className="w-6 h-6" />
           </button>
-          <button
-            onClick={handleGuardar}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-          >
-            Guardar
-          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-8 bg-gradient-to-b from-gray-50 to-gray-100 overflow-y-auto max-h-[calc(90vh-200px)]">
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl shadow-sm">
+              <p className="text-red-600 text-sm flex items-center">
+                <span className="mr-2">⚠️</span>
+                {error}
+              </p>
+            </div>
+          )}
+
+          <div className="space-y-8">
+            {/* Nombre del Producto */}
+            <div className="group">
+              <label className="block text-sm font-medium text-gray-700 mb-2 group-hover:text-purple-600 transition-colors duration-200">
+                Nombre del Producto
+              </label>
+              <input
+                type="text"
+                name="nombre_producto"
+                value={productoEditado.nombre_producto}
+                onChange={handleChange}
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-200 hover:border-purple-400"
+                placeholder="Ingrese el nombre del producto"
+              />
+            </div>
+
+            {/* Descripción */}
+            <div className="group">
+              <label className="block text-sm font-medium text-gray-700 mb-2 group-hover:text-purple-600 transition-colors duration-200">
+                Descripción
+              </label>
+              <textarea
+                name="descripcion"
+                value={productoEditado.descripcion}
+                onChange={handleChange}
+                rows="4"
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-200 hover:border-purple-400 resize-none"
+                placeholder="Describa el producto..."
+              />
+            </div>
+
+            {/* Precio y Stock */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="group">
+                <label className="block text-sm font-medium text-gray-700 mb-2 group-hover:text-purple-600 transition-colors duration-200">
+                  Precio
+                </label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                  <input
+                    type="number"
+                    name="precio_venta"
+                    value={productoEditado.precio_venta}
+                    onChange={handleChange}
+                    className="w-full pl-8 pr-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-200 hover:border-purple-400"
+                  />
+                </div>
+              </div>
+              <div className="group">
+                <label className="block text-sm font-medium text-gray-700 mb-2 group-hover:text-purple-600 transition-colors duration-200">
+                  Stock
+                </label>
+                <input
+                  type="number"
+                  name="stock"
+                  value={productoEditado.stock}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-200 hover:border-purple-400"
+                />
+              </div>
+            </div>
+
+            {/* Categoría */}
+            <div className="group">
+              <label className="block text-sm font-medium text-gray-700 mb-2 group-hover:text-purple-600 transition-colors duration-200">
+                Categoría
+              </label>
+              <select
+                name="categoria_id"
+                value={productoEditado.categoria_id}
+                onChange={handleChange}
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-200 hover:border-purple-400 appearance-none"
+              >
+                <option value="">Seleccionar Categoría</option>
+                {categorias.map((categoria) => (
+                  <option key={categoria.categoria_id} value={categoria.categoria_id}>
+                    {categoria.nombre_categoria}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Imagen Actual */}
+            {productoEditado.imagen_url && (
+              <div className="group">
+                <label className="block text-sm font-medium text-gray-700 mb-2 group-hover:text-purple-600 transition-colors duration-200">
+                  Imagen Actual
+                </label>
+                <div className="relative aspect-video bg-white rounded-xl overflow-hidden shadow-lg border border-gray-200 group-hover:border-purple-400 transition-colors duration-200">
+                  <img
+                    src={productoEditado.imagen_url}
+                    alt="Imagen del producto"
+                    className="absolute inset-0 w-full h-full object-contain p-4"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Cloudinary Upload */}
+            <div className="group">
+              <label className="block text-sm font-medium text-gray-700 mb-2 group-hover:text-purple-600 transition-colors duration-200 flex items-center gap-2">
+                <CameraIcon className="w-4 h-4" />
+                Cambiar Imagen
+              </label>
+              <Cloudinary
+                currentImageUrl={productoEditado.imagen_url}
+                onImageUpload={(url) =>
+                  setProductoEditado((prev) => ({ ...prev, imagen_url: url }))
+                }
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="px-8 py-6 bg-white border-t border-gray-200">
+          <div className="flex justify-end space-x-4">
+            <button
+              onClick={onClose}
+              className="px-6 py-2.5 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-100 transition-all duration-200 hover:shadow-md focus:ring-4 focus:ring-gray-200"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={handleGuardar}
+              className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl hover:from-purple-700 hover:to-blue-700 transition-all duration-200 hover:shadow-md focus:ring-4 focus:ring-purple-500/50 flex items-center gap-2"
+            >
+              <SaveIcon className="w-4 h-4" />
+              Guardar Cambios
+            </button>
+          </div>
         </div>
       </div>
     </div>

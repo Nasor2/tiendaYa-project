@@ -4,8 +4,8 @@ const Cloudinary = ({ currentImageUrl, onImageUpload }) => {
   const preset_name = "ml_default";  // Usar el preset adecuado
   const cloud_name = "desfkvrfo";  // Reemplazar con tu cloud_name
 
-  const [image, setImage] = useState(currentImageUrl || '');  // Usa la imagen inicial si la hay
-  const [loading, setLoading] = useState(false);
+  const [setImage] = useState(currentImageUrl || '');  // Usa la imagen inicial si la hay
+  const [setLoading] = useState(false);
 
   const uploadImage = async (e) => {
     const files = e.target.files;
@@ -46,14 +46,6 @@ const Cloudinary = ({ currentImageUrl, onImageUpload }) => {
             className="sr-only"
           />
         </label>
-
-        {loading ? (
-          <h3>Loading...</h3>
-        ) : (
-          <div className="ml-4 flex items-center">
-            {image && <img src={image} alt="Imagen subida" className="h-16 w-16 object-cover rounded-md" />}
-          </div>
-        )}
       </div>
     </div>
   );

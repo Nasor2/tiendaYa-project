@@ -1,37 +1,32 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useLocation} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Navbar from "../componentes/Navbar";
-import TarjetaProducto from "../componentes/TarjetaProducto"; // Importar TarjetaProducto
+import TarjetaProducto from "../componentes/TarjetaProducto";
 import { useCart } from "../context/CartContext";
+import {  ArrowLeft } from "lucide-react";
+import { Store} from "lucide-react";
 
 const VistaProducto = () => {
   const [quantity, setQuantity] = useState(1);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedTab, setSelectedTab] = useState("descripcion");
   const location = useLocation();
   const producto = location.state?.producto;
-  const { addToCart, updateQuantity } = useCart()
+  const { addToCart, updateQuantity } = useCart();
 
   useEffect(() => {
     if (producto?.nombre_categoria) {
       const fetchRelatedProducts = async () => {
         try {
-          console.log(
-            "Cargando productos relacionados para la categoría:",
-            producto.nombre_categoria
-          );
           const response = await fetch(
-            `http://localhost:3000/productos/buscar?q=${encodeURIComponent(producto.nombre_categoria)}`
+            `http://localhost:3000/productos/buscar?q=${encodeURIComponent(
+              producto.nombre_categoria
+            )}`
           );
           const data = await response.json();
-          console.log("Datos de productos relacionados recibidos:", data);
-
           if (data.productos && Array.isArray(data.productos)) {
             setRelatedProducts(data.productos);
-          } else {
-            console.error(
-              "Los productos relacionados no tienen el formato esperado"
-            );
           }
         } catch (error) {
           console.error("Error al buscar productos relacionados:", error);
@@ -39,7 +34,6 @@ const VistaProducto = () => {
           setIsLoading(false);
         }
       };
-
       fetchRelatedProducts();
     } else {
       setIsLoading(false);
@@ -47,7 +41,18 @@ const VistaProducto = () => {
   }, [producto?.nombre_categoria]);
 
   if (!producto) {
-    return <p>Producto no encontrado.</p>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-blue-50">
+        <div className="text-center p-8 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg">
+          <h2 className="text-2xl font-bold text-gray-800">
+            Producto no encontrado
+          </h2>
+          <p className="mt-2 text-gray-600">
+            El producto que buscas no está disponible.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   const inStock = producto.stock > 0;
@@ -55,7 +60,7 @@ const VistaProducto = () => {
   const handleIncrement = () => {
     if (quantity < producto.stock) {
       setQuantity(quantity + 1);
-    } 
+    }
   };
 
   const handleDecrement = () => {
@@ -66,105 +71,217 @@ const VistaProducto = () => {
 
   const handleAddToCart = () => {
     addToCart({ ...producto });
-    updateQuantity(producto.producto_id, quantity)
-    setQuantity(1); // Restablecer cantidad a 1 después de agregar
+    updateQuantity(producto.producto_id, quantity);
+    setQuantity(1);
   };
-  
 
   return (
-    <div className="bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
       <Navbar />
 
-      {/* Contenedor del producto */}
-      <div className="max-w-5xl mx-auto p-8 grid grid-cols-1 md:grid-cols-2 gap-0">
-        <div className="col-span-2 flex bg-white rounded-lg shadow-md">
-          <div className="flex-none w-1/2 bg-white">
-            <img
-              src={producto.imagen_url} // Usa la URL de la imagen del producto
-              alt="Imagen del producto"
-              className="w-full h-auto object-contain rounded-l-lg"
-            />
-          </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <nav className="flex items-center space-x-4 text-sm">
+          <a
+            href="/"
+            className="flex items-center text-gray-600 hover:text-purple-600 transition-all duration-300 group"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+            Volver a la tienda
+          </a>
+          <span className="text-gray-400">/</span>
+          <a
+            href="/categorias"
+            className="text-gray-600 hover:text-purple-600 transition-colors"
+          >
+            {producto.nombre_categoria}
+          </a>
+        </nav>
+      </div>
 
-          <div className="flex-grow space-y-4 p-6 bg-white rounded-r-lg">
-            <h1 className="text-4xl font-bold">{producto.nombre}</h1>
-            <p className="text-gray-600">{producto.descripcion}</p>
-
-            <div>
-              <span className="text-3xl font-bold text-blue-600">
-                ${producto.precio_venta}
-              </span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg border border-purple-100/50 overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+            <div className="relative h-[600px] lg:h-[700px] group">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-400/5 to-blue-400/5 mix-blend-overlay group-hover:opacity-0 transition-opacity duration-500"></div>
+              <img
+                src={producto.imagen_url}
+                alt={producto.nombre}
+                className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-all duration-700"
+              />
+              {inStock ? (
+                <div className="absolute top-4 right-4 bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
+                  En Stock ({producto.stock} unidades)
+                </div>
+              ) : (
+                <div className="absolute top-4 right-4 bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
+                  Agotado
+                </div>
+              )}
             </div>
 
-            <div className="border-t border-b py-4 space-y-2">
-              <p className="text-gray-500">Vendido por: {producto.nombre_tienda}</p>
-              <p className="text-gray-500">Vendedor: {producto.nombre_tendero} {producto.apellido_tendero}</p>
-            </div>
+            <div className="p-8 lg:p-12 flex flex-col h-full">
+              <div className="border-b border-gray-100 pb-8">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-2">
+                    <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+                      {producto.nombre_categoria}
+                    </span>
+                  </div>
+                </div>
 
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <label className="text-gray-700">Cantidad:</label>
-                <button
-                  onClick={handleDecrement}
-                  className="px-2 py-1 rounded-l-md text-gray-700 hover:bg-gray-400"
-                  disabled={quantity === 1}
-                >
-                  -
-                </button>
-                <span className="px-4 py-1 border-t border-b border-gray-300">{quantity}</span>
-                <button
-                  onClick={handleIncrement}
-                  className="px-2 py-1 rounded-r-md text-gray-700 hover:bg-gray-400"
-                  disabled={quantity === producto.stock}
-                >
-                  +
-                </button>
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                  {producto.nombre}
+                </h1>
+
+                <div className="flex items-center justify-between bg-gray-50 rounded-xl p-4">
+                  <div className="flex items-center space-x-4">
+                  <Store className="w-8 h-8 text-gray-400" />
+                    <div>
+                      <h3 className="font-medium text-gray-900">
+                        {producto.nombre_tienda}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        Vendido por {producto.nombre_tendero}{" "}
+                        {producto.apellido_tendero}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="text-sm">
-                {inStock ? (
-                  <span className="text-green-600">En stock</span>
-                ) : (
-                  <span className="text-red-600">Agotado</span>
+
+              <div className="py-8 border-b border-gray-100">
+                <div className="flex space-x-8 mb-8">
+                  <button
+                    className={`pb-4 border-b-2 transition-colors ${
+                      selectedTab === "descripcion"
+                        ? "border-purple-600 text-purple-600"
+                        : "border-transparent text-gray-500 hover:text-gray-700"
+                    }`}
+                    onClick={() => setSelectedTab("descripcion")}
+                  >
+                    Descripción
+                  </button>
+                </div>
+
+                <div className="space-y-6">
+                  {selectedTab === "descripcion" && (
+                    <p className="text-gray-600 leading-relaxed">
+                      {producto.descripcion}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <div className="flex items-center space-x-4">
+                      <span className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                        ${producto.precio_venta}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-1 bg-gray-100 rounded-xl p-1">
+                    <button
+                      onClick={handleDecrement}
+                      className={`w-12 h-12 flex items-center justify-center rounded-lg transition-all duration-200 
+                        ${
+                          quantity === 1
+                            ? "text-gray-400 cursor-not-allowed"
+                            : "text-gray-700 hover:bg-white hover:shadow-md active:scale-95"
+                        }`}
+                      disabled={quantity === 1}
+                    >
+                      <span className="text-2xl">−</span>
+                    </button>
+                    <span className="w-12 text-center text-lg font-semibold">
+                      {quantity}
+                    </span>
+                    <button
+                      onClick={handleIncrement}
+                      className={`w-12 h-12 flex items-center justify-center rounded-lg transition-all duration-200 
+                        ${
+                          quantity === producto.stock
+                            ? "text-gray-400 cursor-not-allowed"
+                            : "text-gray-700 hover:bg-white hover:shadow-md active:scale-95"
+                        }`}
+                      disabled={quantity === producto.stock}
+                    >
+                      <span className="text-2xl">+</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <button
+                    className={`w-full h-14 rounded-2xl font-semibold transition-all duration-300 
+                      ${
+                        inStock
+                          ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 hover:shadow-lg transform hover:-translate-y-0.5 active:scale-[0.99]"
+                          : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                      }`}
+                    disabled={!inStock}
+                  >
+                    Comprar ahora
+                  </button>
+                  <button
+                    onClick={handleAddToCart}
+                    className={`w-full h-14 rounded-2xl font-semibold transition-all duration-300 
+                      ${
+                        inStock
+                          ? "bg-white border-2 border-purple-600 text-purple-600 hover:bg-purple-50 hover:shadow-lg transform hover:-translate-y-0.5 active:scale-[0.99]"
+                          : "bg-gray-100 border-2 border-gray-300 text-gray-500 cursor-not-allowed"
+                      }`}
+                    disabled={!inStock}
+                  >
+                    Agregar al carrito
+                  </button>
+                </div>
+
+                {!inStock && (
+                  <div className="mt-4 bg-red-50 border border-red-200 rounded-xl p-4">
+                    <p className="text-red-600 text-center font-medium">
+                      Producto actualmente agotado
+                    </p>
+                  </div>
                 )}
               </div>
             </div>
+          </div>
+        </div>
 
-            <div className="space-y-4">
-              <button
-                className={`w-full py-3 rounded-lg font-semibold ${inStock ? "bg-blue-600 text-white hover:bg-blue-700" : "bg-gray-300 text-gray-500 cursor-not-allowed"}`}
-                disabled={!inStock}
-              >
-                Comprar ahora
-              </button>
-
-              <button
-                className={`w-full py-3 rounded-lg font-semibold ${inStock ? "border border-blue-600 text-blue-600 hover:bg-blue-50" : "border border-gray-300 text-gray-500 cursor-not-allowed"}`}
-                disabled={!inStock}
-                onClick={handleAddToCart}
-              >
-                Agregar al carrito
-              </button>
+        {/* Productos relacionados */}
+        <div className="mt-16">
+          <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
+            <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-6">
+              <h2 className="text-2xl font-bold text-white">
+                Productos relacionados
+              </h2>
+            </div>
+            <div className="p-8">
+              {isLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent"></div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                  {relatedProducts.length > 0 ? (
+                    relatedProducts.map((product) => (
+                      <TarjetaProducto key={product.id} producto={product} />
+                    ))
+                  ) : (
+                    <div className="col-span-full py-12">
+                      <p className="text-center text-gray-500">
+                        No se encontraron productos relacionados
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Productos relacionados */}
-      <div className="max-w-5xl mx-auto p-8 mt-12">
-        <h2 className="text-2xl font-bold mb-4">Productos relacionados</h2>
-        {isLoading ? (
-          <p>Cargando productos relacionados...</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {relatedProducts.length > 0 ? (
-              relatedProducts.map((product) => (
-                <TarjetaProducto key={product.id} producto={product} />
-              ))
-            ) : (
-              <p>No se encontraron productos relacionados.</p>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );
