@@ -55,6 +55,11 @@ export const CartProvider = ({ children }) => {
     setCartItems((prevItems) => prevItems.filter((item) => item.producto_id !== productId));
   };
 
+  // Función para vaciar el carrito
+  const clearCart = () => {
+    setCartItems([]); // Limpia todos los elementos del carrito
+  };
+
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   const totalPrice = cartItems.reduce(
@@ -63,7 +68,7 @@ export const CartProvider = ({ children }) => {
   );
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeItem, updateQuantity, totalItems, totalPrice }}>
+    <CartContext.Provider value={{ cartItems, addToCart, removeItem, updateQuantity, totalItems, totalPrice, clearCart }}>
       {children}
     </CartContext.Provider>
   );

@@ -95,6 +95,7 @@ exports.loginUser = async (req, res) => {
         role: 'cliente',
         nombre: user.nombre + " " + user.apellido,
         correo: user.correo,
+        cliente_id: user.cliente_id,
         message: 'Inicio de sesión exitoso',
       });
     }

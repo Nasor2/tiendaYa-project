@@ -14,4 +14,32 @@ exports.obtenerDetallesPedidosPorCliente = (req, res) => {
   });
 };
 
- 
+exports.crearPedido = (req, res) => {
+  const { user } = req; // ID del cliente autenticado
+  const { carrito, total } = req.body;
+
+  console.log("hola", user)
+
+  if (!user || !user.id || !carrito || carrito.length === 0) {
+    return res.status(400).json({ message: 'Datos incompletos para crear el pedido' });
+  }
+
+  const pedidoData = {
+    cliente_id: user.id,
+    carrito,
+    total,
+  };
+
+  pedidosModel.crearPedido(pedidoData, (err, resultado) => {
+    if (err) {
+      console.error('Error al crear el pedido:', err);
+      return res.status(500).json({ message: 'Error al procesar el pedido' });
+    }
+
+    res.status(201).json({
+      message: 'Pedido creado exitosamente',
+      pedido_id: resultado.pedido_id,
+      numeroFactura: resultado.numeroFactura,
+    });
+  });
+};

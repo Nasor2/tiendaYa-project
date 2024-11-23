@@ -26,6 +26,9 @@ router.post('/productos/agregar-producto', authController.verificarToken(['tende
 // Rutas para pedidos
 router.get('/pedidos', authController.verificarToken(['cliente']), pedidoController.obtenerDetallesPedidosPorCliente);
 
+// Rutas para pago de pedidos
+router.post('/pedidos/pago', authController.verificarToken(['cliente']), pedidoController.crearPedido);
+
 //router.get('/pedidos/:idPedido', authController.verificarToken(['cliente']), pedidoController.obtenerDetallePedido);
 
 router.get('/mis-productos', productosController.rutaProtegida);

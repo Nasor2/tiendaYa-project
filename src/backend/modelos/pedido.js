@@ -100,6 +100,97 @@ const getDetallePedidoPorCliente = (idCliente, callback) => {
   });
 };
 
+// Generar número único para la factura
+const generarNumeroFactura = () => {
+  const randomString = Math.random().toString(36).substr(2, 6).toUpperCase();
+  return `FAC${randomString}`;
+};
+
+// Función para actualizar el stock
+const actualizarStock = (carrito) => {
+  const promesas = carrito.map((item) =>
+    new Promise((resolve, reject) => {
+      const query = `UPDATE inventario_tendero SET stock = stock - ? WHERE producto_id = ? AND tendero_id = ?`;
+      const values = [item.quantity, item.producto_id, item.tendero_id];
+      connection.query(query, values, (err) => {
+        if (err) return reject(err);
+        resolve();
+      });
+    })
+  );
+  return Promise.all(promesas);
+};
+
+// Crear un nuevo pedido
+const crearPedido = (pedidoData, callback) => {
+  const { cliente_id, carrito, total } = pedidoData;
+
+  connection.beginTransaction((err) => {
+    if (err) return callback(err);
+
+    // Insertar el pedido
+    const insertarPedidoQuery = `
+      INSERT INTO pedidos (cliente_id, total, estado)
+      VALUES (?, ?, ?)
+    `;
+    connection.query(insertarPedidoQuery, [cliente_id, total, 'Pendiente'], (err, resultadoPedido) => {
+      if (err) {
+        return connection.rollback(() => callback(err));
+      }
+
+      const pedido_id = resultadoPedido.insertId;
+
+      // Generar número de factura y asociarla al pedido
+      const numeroFactura = generarNumeroFactura();
+      const insertarFacturaQuery = `
+        INSERT INTO facturas (pedido_id, numero_factura, total, estado_pago, metodo_pago)
+        VALUES (?, ?, ?, ?, ?)
+      `;
+      connection.query(insertarFacturaQuery, [pedido_id, numeroFactura, total, 'Pendiente', 'Efectivo'], (err) => {
+        if (err) {
+          return connection.rollback(() => callback(err));
+        }
+
+        // Insertar detalle del pedido
+        const detalles = carrito.map((item) => [
+          pedido_id,
+          item.producto_id,
+          item.tendero_id,
+          item.quantity,
+          item.precio_venta,
+          item.quantity * item.precio_venta,
+        ]);
+
+        const insertarDetalleQuery = `
+          INSERT INTO detalle_pedidos (pedido_id, producto_id, tendero_id, cantidad, precio_unitario, subtotal)
+          VALUES ?
+        `;
+        connection.query(insertarDetalleQuery, [detalles], (err) => {
+          if (err) {
+            return connection.rollback(() => callback(err));
+          }
+
+          // Actualizar stock en el inventario
+          actualizarStock(carrito)
+            .then(() => {
+              connection.commit((err) => {
+                if (err) {
+                  return connection.rollback(() => callback(err));
+                }
+
+                callback(null, { pedido_id, numeroFactura });
+              });
+            })
+            .catch((errorStock) => {
+              connection.rollback(() => callback(errorStock));
+            });
+        });
+      });
+    });
+  });
+};
+
 module.exports = {
   getDetallePedidoPorCliente,
+  crearPedido,
 };

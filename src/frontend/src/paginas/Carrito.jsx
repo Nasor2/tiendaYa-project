@@ -1,12 +1,24 @@
-import React from "react";
+import React, { useState, useContext} from "react";
 import { useCart } from "../context/CartContext";
 import { Trash2, Plus, Minus, ArrowLeft, ShoppingBag, Package, Clock, Shield } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import Navbar from "../componentes/Navbar";
+import { AuthContext } from "../context/AuthContext";
+import axios from "axios";
 
 export default function Carrito() {
-  const { cartItems, totalPrice, updateQuantity, removeItem } = useCart();
+  const { cartItems, totalPrice, updateQuantity, removeItem, clearCart } = useCart();
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const [isModalOpen, setModalOpen] = useState(false); // Estado para manejar la apertura del modal
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("Efectivo"); // Método de pago seleccionado
+
+  if (!user?.token) {
+    alert("Token no encontrado, por favor inicia sesión");
+    navigate("/login");
+    return;
+  }
   
   const handleGoBack = () => {
     navigate(-1);
@@ -31,6 +43,48 @@ export default function Carrito() {
       description: "Tus datos estan protegidos"
     },
   ];
+
+  // Manejar el proceso de pago
+  const handlePago = async () => {
+    try {
+      // Estructura del pedido
+      const pedidoData = {
+        carrito: cartItems,
+        total: totalPrice,
+      };
+
+      // Configuración de encabezados con el token
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`, // Se asegura de enviar el token del cliente
+          "Content-Type": "application/json",
+        },
+      };
+
+      // Realizar la solicitud POST con Axios
+      const response = await axios.post(
+        "http://localhost:3000/pedidos/pago", // Cambia esta URL por la de tu backend
+        pedidoData,
+        config
+      );
+
+      // Manejo de respuesta exitosa
+      alert(`Pedido creado exitosamente. Número de factura: ${response.data.numeroFactura}`);
+      clearCart();
+      navigate("/mis-pedidos"); // Redirigir a historial de pedidos o página de confirmación
+    } catch (error) {
+      console.error("Error al crear el pedido:", error.response?.data || error.message);
+      alert("Ocurrió un error al procesar tu pedido. Intenta nuevamente.");
+    }
+  };  
+
+  // Manejar selección de método de pago
+  const handlePaymentMethodChange = (method) => {
+    if (method !== "Efectivo") {
+      alert("Oops, aún no tenemos más métodos de pago. ¡Estamos trabajando para mejorar!");
+    }
+    setSelectedPaymentMethod("Efectivo");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-blue-50">
@@ -176,7 +230,11 @@ export default function Carrito() {
                 </div>
 
                 <div className="mt-8 space-y-4">
-                  <button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-4 px-6 rounded-xl font-medium hover:from-purple-700 hover:to-blue-700 transform hover:-translate-y-0.5 transition-all duration-200 shadow-md hover:shadow-lg">
+                  <button 
+                    onClick={() => setModalOpen(true)} // Abrir modal 
+                    className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-4 px-6 rounded-xl font-medium hover:from-purple-700 hover:to-blue-700 transform hover:-translate-y-0.5 transition-all duration-200 shadow-md hover:shadow-lg"
+                    disabled = {cartItems.length === 0}
+                  >
                     Proceder al Pago
                   </button>
                   
@@ -198,6 +256,52 @@ export default function Carrito() {
           )}
         </div>
       </div>
+
+            {/* Modal de confirmación de pedido */}
+            {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl shadow-lg p-6 max-w-md w-full">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">Confirmar Pedido</h2>
+            <p className="text-gray-600 mb-6">Estás a punto de realizar el siguiente pedido:</p>
+            
+            <ul className="text-gray-600 mb-6">
+              {cartItems.map((item) => (
+                <li key={item.producto_id} className="flex justify-between">
+                  <span>{item.nombre} (x{item.quantity})</span>
+                  <span>${(item.precio_venta * item.quantity).toLocaleString()}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mb-6">
+              <label className="block text-gray-800 font-medium mb-2">Método de Pago:</label>
+              <select
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
+                value={selectedPaymentMethod}
+                onChange={(e) => handlePaymentMethodChange(e.target.value)}
+              >
+                <option value="Efectivo">Efectivo</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+
+            <div className="flex justify-end gap-4">
+              <button 
+                onClick={() => setModalOpen(false)} 
+                className="bg-gray-200 text-gray-600 py-2 px-4 rounded-lg hover:bg-gray-300"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={handlePago} 
+                className="bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700"
+              >
+                Confirmar y Pagar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

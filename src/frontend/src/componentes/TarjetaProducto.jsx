@@ -29,7 +29,7 @@ const TarjetaProducto = ({ producto }) => {
       <div className="relative overflow-hidden h-48 rounded-t-2xl">
         
         {/* Badge de stock si es bajo */}
-        {producto.stock <= 5 && (
+        {(producto.stock <= 5 && producto.stock > 0) && (
           <div className="absolute top-3 right-3 bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-medium z-10">
             ¡Últimas unidades!
           </div>

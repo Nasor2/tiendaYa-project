@@ -49,7 +49,7 @@ const searchProductos = (termino, callback) => {
 
   // Buscar productos que tengan inventario asociado
   const queryProducto = `
-    SELECT p.*, t.nombre_tienda, t.nombre AS nombre_tendero, t.apellido AS apellido_tendero, i.precio_venta, i.stock
+    SELECT p.*, t.tendero_id, t.nombre_tienda, t.nombre AS nombre_tendero, t.apellido AS apellido_tendero, i.precio_venta, i.stock
     FROM productos p
     LEFT JOIN inventario_tendero i ON p.producto_id = i.producto_id
     LEFT JOIN tenderos t ON i.tendero_id = t.tendero_id
@@ -68,7 +68,7 @@ const searchProductos = (termino, callback) => {
 
     // Si no encontramos productos, buscamos por categoría
     const queryCategoria = `
-      SELECT p.*, t.nombre_tienda, t.nombre AS nombre_tendero, t.apellido AS apellido_tendero, i.precio_venta, i.stock, c.nombre_categoria
+      SELECT p.*,  t.tendero_id, t.nombre_tienda, t.nombre AS nombre_tendero, t.apellido AS apellido_tendero, i.precio_venta, i.stock, c.nombre_categoria
       FROM productos p
       JOIN categorias c ON p.categoria_id = c.categoria_id
       LEFT JOIN inventario_tendero i ON p.producto_id = i.producto_id
