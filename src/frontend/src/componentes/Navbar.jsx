@@ -111,11 +111,14 @@ const Navbar = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between gap-8">
           {/* Logo */}
-          <Link
-            to="/"
-            className="text-2xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:from-purple-600 hover:to-blue-600 transition-all duration-300"
+          <Link 
+            to="/" 
+            className="flex items-center gap-2 text-2xl font-black"
           >
-            TiendaYa
+            <img src="/logo32px.png" alt="TiendaYa Logo" />
+            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:from-purple-600 hover:to-blue-600 transition-all duration-300">
+              TiendaYa
+            </span>
           </Link>
 
           {/* Barra de búsqueda - Desktop */}
