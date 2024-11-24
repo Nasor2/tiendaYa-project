@@ -83,6 +83,10 @@ const VistaProducto = () => {
     setQuantity(1);
   };
 
+  const handleGoCarrito = () => {
+    window.location.href = '/cart';
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
       <Navbar />
@@ -223,6 +227,10 @@ const VistaProducto = () => {
 
                 <div className="space-y-4">
                   <button
+                    onClick={ () => {
+                      handleAddToCart();
+                      handleGoCarrito();
+                    }}
                     className={`w-full h-14 rounded-2xl font-semibold transition-all duration-300 
                       ${
                         inStock
