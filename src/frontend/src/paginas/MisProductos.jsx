@@ -60,7 +60,10 @@ const MisProductos = () => {
       setIsModalOpen(false);
       obtenerProductos();
     } catch (error) {
-      console.error("Error al actualizar el producto:", error.response || error);
+      console.error(
+        "Error al actualizar el producto:",
+        error.response || error
+      );
     }
   };
 
@@ -88,9 +91,13 @@ const MisProductos = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <Navbar />
-      
+
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-12">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute transform -rotate-6 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-white opacity-10 rounded-full"></div>
+          <div className="absolute transform rotate-12 translate-y-1/2 -translate-x-1/4 w-96 h-96 bg-white opacity-10 rounded-full"></div>
+        </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
@@ -99,7 +106,7 @@ const MisProductos = () => {
             <p className="text-lg md:text-xl text-purple-100 max-w-2xl mx-auto mb-8">
               Gestiona tu inventario y mantén tu catálogo actualizado
             </p>
-            
+
             {/* Nuevo botón Agregar Producto */}
             <button
               onClick={() => setVentanaVisible(true)}
@@ -119,7 +126,6 @@ const MisProductos = () => {
                   d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                 />
               </svg>
-              
               Agregar Nuevo Producto
             </button>
           </div>
@@ -128,12 +134,12 @@ const MisProductos = () => {
 
       <main className="flex-grow py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-6"> 
-          <AddProducto
-            visible={ventanaVisible}
-            onClose={() => setVentanaVisible(false)}
-          />
-        </div>
+          <div className="flex justify-between items-center mb-6">
+            <AddProducto
+              visible={ventanaVisible}
+              onClose={() => setVentanaVisible(false)}
+            />
+          </div>
 
           {productos.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
@@ -158,15 +164,23 @@ const MisProductos = () => {
                     </p>
                     <div className="space-y-2 mb-4">
                       <div className="flex justify-between items-center text-sm">
-                        <span className="font-medium text-gray-600">Precio</span>
-                        <span className="font-bold text-purple-600">$ {producto.precio_venta}</span>
+                        <span className="font-medium text-gray-600">
+                          Precio
+                        </span>
+                        <span className="font-bold text-purple-600">
+                          $ {producto.precio_venta}
+                        </span>
                       </div>
                       <div className="flex justify-between items-center text-sm">
                         <span className="font-medium text-gray-600">Stock</span>
-                        <span className="font-bold text-blue-600">{producto.stock} unidades</span>
+                        <span className="font-bold text-blue-600">
+                          {producto.stock} unidades
+                        </span>
                       </div>
                       <div className="flex justify-between items-center text-sm">
-                        <span className="font-medium text-gray-600">Categoría</span>
+                        <span className="font-medium text-gray-600">
+                          Categoría
+                        </span>
                         <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium text-xs">
                           {producto.categoria}
                         </span>
@@ -184,9 +198,11 @@ const MisProductos = () => {
             </div>
           ) : (
             <div className="bg-white rounded-2xl shadow-xl p-12 text-center">
-              <p className="text-xl text-gray-600 mb-6">No tienes productos en tu inventario.</p>
-              <button 
-                onClick={() => navigate('/agregar-producto')} 
+              <p className="text-xl text-gray-600 mb-6">
+                No tienes productos en tu inventario.
+              </p>
+              <button
+                onClick={() => navigate("/agregar-producto")}
                 className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-300 transform hover:scale-105"
               >
                 Agregar Nuevo Producto
