@@ -66,13 +66,25 @@ const Navbar = () => {
         <p className="text-xs text-gray-500">{user.correo}</p>
       </div>
       {user.role === "tendero" ? (
-        <Link
-          to="/mis-productos"
-          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-        >
-          <Store className="w-4 h-4" />
-          Mis Productos
-        </Link>
+        <>
+          <Link
+            to="/mis-productos"
+            className="flex items-center gap-2 p-3 rounded-lg hover:bg-gray-50 
+                    text-gray-700 transition-colors duration-300"
+          >
+            <Store className="w-4 h-4" />
+            Mis Productos
+          </Link>
+
+          <Link
+            to="/pedidos-tendero"
+            className="flex items-center gap-2 p-3 rounded-lg hover:bg-gray-50 
+                    text-gray-700 transition-colors duration-300"
+          >
+            <Store className="w-4 h-4" />
+            Pedidos
+          </Link>
+        </>
       ) : (
         <Link
           to="/mis-pedidos"

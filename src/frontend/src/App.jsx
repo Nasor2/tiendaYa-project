@@ -13,6 +13,7 @@ import VistaProducto from './paginas/VistaProducto';
 import CartPreview from './paginas/Carrito';
 import MisProductos from './paginas/MisProductos';
 import MisPedidos from './paginas/MisPedidos';
+import PedidosTendero from './paginas/PedidosTendero';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
                 <Route path="/cart" element={<CartPreview />} />
                 <Route path="/mis-productos" element={<MisProductos />} />
                 <Route path="/mis-pedidos" element={<MisPedidos />} />
+                <Route path="/pedidos-tendero" element={<PedidosTendero />} />
               </Routes>
             </div>
             <Footer />

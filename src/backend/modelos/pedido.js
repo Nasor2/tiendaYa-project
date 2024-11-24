@@ -20,6 +20,7 @@ const getDetallePedidoPorCliente = (idCliente, callback) => {
       dp.cantidad AS cantidad_producto,
       dp.precio_unitario AS precio_unitario_producto,
       dp.subtotal AS subtotal_producto,
+      dp.estado_detalle as estado_producto,
       pr.nombre AS nombre_producto,
       pr.imagen_url AS imagen_url_producto,
       t.nombre_tienda AS nombre_tienda_tendero,
@@ -83,6 +84,7 @@ const getDetallePedidoPorCliente = (idCliente, callback) => {
           cantidad_producto: row.cantidad_producto,
           precio_unitario_producto: row.precio_unitario_producto,
           subtotal_producto: row.subtotal_producto,
+          estado_producto: row.estado_producto,
           tendero: {
             nombre_tienda_tendero: row.nombre_tienda_tendero,
             nombre_tendero: row.nombre_tendero,
@@ -190,7 +192,152 @@ const crearPedido = (pedidoData, callback) => {
   });
 };
 
+// Obtener pedidos por tendero
+const getPedidosPorTendero = (tenderoId, callback) => {
+  const query = `
+    SELECT 
+      p.pedido_id,
+      p.fecha_pedido,
+      p.total AS total_pedido,
+      p.estado AS estado_pedido,
+      dp.detalle_id,
+      dp.producto_id,
+      dp.cantidad,
+      dp.precio_unitario,
+      dp.subtotal,
+      dp.estado_detalle,
+      pr.nombre AS nombre_producto,
+      pr.imagen_url AS imagen_producto
+    FROM detalle_pedidos dp
+    INNER JOIN pedidos p ON dp.pedido_id = p.pedido_id
+    INNER JOIN productos pr ON dp.producto_id = pr.producto_id
+    WHERE dp.tendero_id = ?
+    ORDER BY p.fecha_pedido DESC
+  `;
+
+  connection.query(query, [tenderoId], (err, results) => {
+    if (err) {
+      console.error('Error al obtener pedidos del tendero:', err);
+      return callback(err, null);
+    }
+
+    // Agrupar los pedidos por pedido_id
+    const pedidos = results.reduce((acc, row) => {
+      const pedidoId = row.pedido_id;
+
+      if (!acc[pedidoId]) {
+        acc[pedidoId] = {
+          pedido_id: row.pedido_id,
+          fecha_pedido: row.fecha_pedido,
+          total_pedido: row.total_pedido,
+          estado_pedido: row.estado_pedido,
+          detalles: [],
+        };
+      }
+
+      acc[pedidoId].detalles.push({
+        detalle_id: row.detalle_id,
+        cantidad: row.cantidad,
+        precio_unitario: row.precio_unitario,
+        subtotal: row.subtotal,
+        estado_detalle: row.estado_detalle,
+        producto: {
+          producto_id: row.producto_id,
+          nombre: row.nombre_producto,
+          imagen: row.imagen_producto,
+        },
+      });
+
+      return acc;
+    }, {});
+
+    callback(null, Object.values(pedidos));
+  });
+};
+
+// Actualizar estado del detalle y del pedido
+const actualizarEstadoDetalle = (detalleId, nuevoEstado, callback) => {
+  // Actualizar el estado del detalle
+  const actualizarDetalleQuery = `
+    UPDATE detalle_pedidos
+    SET estado_detalle = ?
+    WHERE detalle_id = ?
+  `;
+
+  connection.query(actualizarDetalleQuery, [nuevoEstado, detalleId], (err, result) => {
+    if (err) {
+      console.error('Error al actualizar estado del detalle:', err);
+      return callback(err);
+    }
+
+    // Obtener el pedido relacionado
+    const obtenerPedidoQuery = `
+      SELECT pedido_id
+      FROM detalle_pedidos
+      WHERE detalle_id = ?
+    `;
+
+    connection.query(obtenerPedidoQuery, [detalleId], (err, results) => {
+      if (err || results.length === 0) {
+        console.error('Error al obtener el pedido relacionado:', err);
+        return callback(err || 'Pedido no encontrado');
+      }
+
+      const pedidoId = results[0].pedido_id;
+
+      // Verificar los estados de los detalles del pedido
+      const verificarEstadosQuery = `
+        SELECT estado_detalle
+        FROM detalle_pedidos
+        WHERE pedido_id = ?
+      `;
+
+      connection.query(verificarEstadosQuery, [pedidoId], (err, detalles) => {
+        if (err) {
+          console.error('Error al verificar estados de los detalles:', err);
+          return callback(err);
+        }
+
+        const estados = detalles.map((d) => d.estado_detalle);
+        let nuevoEstadoPedido = 'pendiente';
+
+        if (estados.every((estado) => estado === 'completado')) {
+          nuevoEstadoPedido = 'completado';
+        } else if (estados.every((estado) => estado === 'cancelado')) {
+          nuevoEstadoPedido = 'cancelado';
+        } else if (estados.every((estado) => estado === 'en_proceso')) {
+          nuevoEstadoPedido = 'en_proceso';
+        } else if (estados.every((estado) => estado === 'confirmado')) {
+          nuevoEstadoPedido = 'confirmado';
+        }
+
+        // Actualizar el estado del pedido
+        const actualizarPedidoQuery = `
+          UPDATE pedidos
+          SET estado = ?
+          WHERE pedido_id = ?
+        `;
+
+        connection.query(
+          actualizarPedidoQuery,
+          [nuevoEstadoPedido, pedidoId],
+          (err) => {
+            if (err) {
+              console.error('Error al actualizar estado del pedido:', err);
+              return callback(err);
+            }
+
+            callback(null, { pedido_id: pedidoId, estado_pedido: nuevoEstadoPedido });
+          }
+        );
+      });
+    });
+  });
+};
+
 module.exports = {
   getDetallePedidoPorCliente,
   crearPedido,
+  getPedidosPorTendero,
+  actualizarEstadoDetalle,
 };

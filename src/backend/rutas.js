@@ -31,6 +31,11 @@ router.post('/pedidos/pago', authController.verificarToken(['cliente']), pedidoC
 
 //router.get('/pedidos/:idPedido', authController.verificarToken(['cliente']), pedidoController.obtenerDetallePedido);
 
+// Rutas para tenderos
+router.get('/pedidos-tenderos', authController.verificarToken(['tendero']), pedidoController.obtenerPedidosPorTendero);
+
+router.put('/pedidos-tenderos/:detalleId', authController.verificarToken(['tendero']), pedidoController.actualizarEstadoDetalle);
+
 router.get('/mis-productos', productosController.rutaProtegida);
 
 router.get('/productos/buscar', productosController.buscarProductos);
