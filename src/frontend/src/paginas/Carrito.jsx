@@ -1,46 +1,59 @@
-import React, { useState, useContext} from "react";
+import React, { useState, useContext } from "react";
 import { useCart } from "../context/CartContext";
-import { Trash2, Plus, Minus, ArrowLeft, ShoppingBag, Package, Clock, Shield } from "lucide-react";
-import { useNavigate } from 'react-router-dom';
+import {
+  Trash2,
+  Plus,
+  Minus,
+  ArrowLeft,
+  ShoppingBag,
+  Package,
+  Clock,
+  Shield,
+  CreditCard
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../componentes/Navbar";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 
 export default function Carrito() {
-  const { cartItems, totalPrice, updateQuantity, removeItem, clearCart } = useCart();
+  const { cartItems, totalPrice, updateQuantity, removeItem, clearCart } =
+    useCart();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [isModalOpen, setModalOpen] = useState(false); // Estado para manejar la apertura del modal
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("Efectivo"); // Método de pago seleccionado
+  const [selectedPaymentMethod, setSelectedPaymentMethod] =
+    useState("Efectivo"); // Método de pago seleccionado
 
   if (!user?.token) {
     alert("Token no encontrado, por favor inicia sesión");
     navigate("/login");
     return;
   }
-  
+
   const handleGoBack = () => {
     navigate(-1);
   };
 
   const handleGoInicio = () => {
-    window.location.href = '/';
+    window.location.href = "/";
   };
   const beneficios = [
     {
       icon: <Package className="h-6 w-6 text-purple-600" />,
       title: "Envio Seguro",
-      description: "Productos bien empaquetados"
+      description: "Productos bien empaquetados",
     },
     {
       icon: <Clock className="h-6 w-6 text-purple-600" />,
       title: "Envio Rapido",
-      description: "Entrega en 24-48 horas"
-    }, {
+      description: "Entrega en 24-48 horas",
+    },
+    {
       icon: <Shield className="h-6 w-6 text-purple-600" />,
       title: "Compra Protegida",
-      description: "Tus datos estan protegidos"
+      description: "Tus datos estan protegidos",
     },
   ];
 
@@ -69,19 +82,26 @@ export default function Carrito() {
       );
 
       // Manejo de respuesta exitosa
-      alert(`Pedido creado exitosamente. Número de factura: ${response.data.numeroFactura}`);
+      alert(
+        `Pedido creado exitosamente. Número de factura: ${response.data.numeroFactura}`
+      );
       clearCart();
       navigate("/mis-pedidos"); // Redirigir a historial de pedidos o página de confirmación
     } catch (error) {
-      console.error("Error al crear el pedido:", error.response?.data || error.message);
+      console.error(
+        "Error al crear el pedido:",
+        error.response?.data || error.message
+      );
       alert("Ocurrió un error al procesar tu pedido. Intenta nuevamente.");
     }
-  };  
+  };
 
   // Manejar selección de método de pago
   const handlePaymentMethodChange = (method) => {
     if (method !== "Efectivo") {
-      alert("Oops, aún no tenemos más métodos de pago. ¡Estamos trabajando para mejorar!");
+      alert(
+        "Oops, aún no tenemos más métodos de pago. ¡Estamos trabajando para mejorar!"
+      );
     }
     setSelectedPaymentMethod("Efectivo");
   };
@@ -89,11 +109,11 @@ export default function Carrito() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-blue-50">
       <Navbar />
-      
+
       <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <button 
+          <button
             onClick={handleGoBack}
             className="p-2 hover:bg-white/80 rounded-full transition-colors duration-200 shadow-sm"
           >
@@ -118,8 +138,8 @@ export default function Carrito() {
               <div className="divide-y divide-gray-100">
                 {cartItems.length > 0 ? (
                   cartItems.map((item) => (
-                    <div 
-                      key={item.id} 
+                    <div
+                      key={item.id}
                       className="p-6 flex items-center gap-6 hover:bg-gray-50 transition-colors duration-200"
                     >
                       <div className="relative group">
@@ -129,7 +149,7 @@ export default function Carrito() {
                           className="w-24 h-24 object-cover rounded-xl shadow-md transform transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      
+
                       <div className="flex-1 min-w-0">
                         <h3 className="font-medium text-gray-800 text-lg mb-1 truncate">
                           {item.nombre}
@@ -137,7 +157,7 @@ export default function Carrito() {
                         <p className="text-purple-600 font-medium">
                           ${item.precio_venta.toLocaleString()}
                         </p>
-                        
+
                         <div className="flex items-center gap-3 mt-3">
                           <button
                             className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors duration-200"
@@ -160,7 +180,8 @@ export default function Carrito() {
 
                       <div className="text-right">
                         <p className="font-bold text-gray-800 text-lg">
-                          ${(item.precio_venta * item.quantity).toLocaleString()}
+                          $
+                          {(item.precio_venta * item.quantity).toLocaleString()}
                         </p>
                         <button
                           className="mt-2 p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors duration-200 group"
@@ -192,12 +213,19 @@ export default function Carrito() {
             {cartItems.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
                 {beneficios.map((beneficio, index) => (
-                  <div key={index} className="bg-white p-6 rounded-xl shadow-md">
+                  <div
+                    key={index}
+                    className="bg-white p-6 rounded-xl shadow-md"
+                  >
                     <div className="flex items-center gap-4">
                       {beneficio.icon}
                       <div>
-                        <h3 className="font-medium text-gray-800">{beneficio.title}</h3>
-                        <p className="text-sm text-gray-500">{beneficio.description}</p>
+                        <h3 className="font-medium text-gray-800">
+                          {beneficio.title}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          {beneficio.description}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -210,19 +238,25 @@ export default function Carrito() {
           {cartItems.length > 0 && (
             <div className="lg:w-96">
               <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h2 className="text-xl font-bold text-gray-800 mb-6">Resumen del Pedido</h2>
-                
+                <h2 className="text-xl font-bold text-gray-800 mb-6">
+                  Resumen del Pedido
+                </h2>
+
                 <div className="space-y-4">
                   <div className="flex justify-between items-center py-4 border-b border-gray-100">
                     <span className="text-gray-600">Subtotal</span>
-                    <span className="font-medium text-gray-800">${totalPrice.toLocaleString()}</span>
+                    <span className="font-medium text-gray-800">
+                      ${totalPrice.toLocaleString()}
+                    </span>
                   </div>
                   <div className="flex justify-between items-center py-4 border-b border-gray-100">
                     <span className="text-gray-600">Envío</span>
                     <span className="text-green-600 font-medium">Gratis</span>
                   </div>
                   <div className="flex justify-between items-center py-4">
-                    <span className="text-lg font-bold text-gray-800">Total</span>
+                    <span className="text-lg font-bold text-gray-800">
+                      Total
+                    </span>
                     <span className="text-xl font-bold text-gray-800">
                       ${totalPrice.toLocaleString()}
                     </span>
@@ -230,15 +264,15 @@ export default function Carrito() {
                 </div>
 
                 <div className="mt-8 space-y-4">
-                  <button 
-                    onClick={() => setModalOpen(true)} // Abrir modal 
+                  <button
+                    onClick={() => setModalOpen(true)} // Abrir modal
                     className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-4 px-6 rounded-xl font-medium hover:from-purple-700 hover:to-blue-700 transform hover:-translate-y-0.5 transition-all duration-200 shadow-md hover:shadow-lg"
-                    disabled = {cartItems.length === 0}
+                    disabled={cartItems.length === 0}
                   >
                     Proceder al Pago
                   </button>
-                  
-                  <button 
+
+                  <button
                     onClick={handleGoInicio}
                     className="w-full bg-white border-2 border-gray-200 text-gray-600 py-4 px-6 rounded-xl font-medium hover:bg-gray-50 transition-colors duration-200"
                   >
@@ -248,7 +282,8 @@ export default function Carrito() {
 
                 <div className="mt-6 pt-6 border-t border-gray-100">
                   <p className="text-center text-sm text-gray-500">
-                    Al proceder con tu compra, aceptas nuestros términos y condiciones
+                    Al proceder con tu compra, aceptas nuestros términos y
+                    condiciones
                   </p>
                 </div>
               </div>
@@ -257,51 +292,96 @@ export default function Carrito() {
         </div>
       </div>
 
-            {/* Modal de confirmación de pedido */}
-            {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl shadow-lg p-6 max-w-md w-full">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Confirmar Pedido</h2>
-            <p className="text-gray-600 mb-6">Estás a punto de realizar el siguiente pedido:</p>
-            
-            <ul className="text-gray-600 mb-6">
-              {cartItems.map((item) => (
-                <li key={item.producto_id} className="flex justify-between">
-                  <span>{item.nombre} (x{item.quantity})</span>
-                  <span>${(item.precio_venta * item.quantity).toLocaleString()}</span>
-                </li>
-              ))}
-            </ul>
+      {/* Modal de confirmación de pedido */}
+      {/* Modal de confirmación de pedido */}
+{isModalOpen && (
+  <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div className="bg-white rounded-3xl shadow-2xl w-full max-w-xl transform transition-all duration-300 scale-100">
+      {/* Header del modal */}
+      <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-t-3xl p-6">
+        <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+          <ShoppingBag className="h-6 w-6" />
+          Confirmar tu Pedido
+        </h2>
+      </div>
 
-            <div className="mb-6">
-              <label className="block text-gray-800 font-medium mb-2">Método de Pago:</label>
-              <select
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
-                value={selectedPaymentMethod}
-                onChange={(e) => handlePaymentMethodChange(e.target.value)}
-              >
-                <option value="Efectivo">Efectivo</option>
-                <option value="Otro">Otro</option>
-              </select>
-            </div>
+      <div className="p-6">
+        {/* Mensaje de confirmación */}
+        <p className="text-gray-600 mb-6 flex items-center gap-2">
+          <Package className="h-5 w-5 text-purple-600" />
+          Resumen de los productos en tu carrito:
+        </p>
 
-            <div className="flex justify-end gap-4">
-              <button 
-                onClick={() => setModalOpen(false)} 
-                className="bg-gray-200 text-gray-600 py-2 px-4 rounded-lg hover:bg-gray-300"
-              >
-                Cancelar
-              </button>
-              <button 
-                onClick={handlePago} 
-                className="bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700"
-              >
-                Confirmar y Pagar
-              </button>
+        {/* Lista de productos */}
+        <div className="bg-gray-50 rounded-2xl p-4 mb-6 max-h-[240px] overflow-y-auto scrollbar-thin scrollbar-thumb-purple-200 scrollbar-track-transparent">
+          {cartItems.map((item) => (
+            <div key={item.producto_id} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-lg bg-white shadow-sm p-2 flex items-center justify-center">
+                  <img
+                    src={item.imagen_url}
+                    alt={item.nombre}
+                    className="w-full h-full object-cover rounded"
+                  />
+                </div>
+                <div>
+                  <h3 className="font-medium text-gray-800">{item.nombre}</h3>
+                  <p className="text-sm text-gray-500">Cantidad: {item.quantity}</p>
+                </div>
+              </div>
+              <span className="font-semibold text-purple-600">
+                ${(item.precio_venta * item.quantity).toLocaleString()}
+              </span>
             </div>
+          ))}
+        </div>
+
+        {/* Método de pago */}
+        <div className="mb-6">
+          <label className="block text-gray-800 font-medium mb-2 flex items-center gap-2">
+            <CreditCard className="h-5 w-5 text-purple-600" />
+            Selecciona tu método de pago:
+          </label>
+          <select
+            className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 text-gray-700 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+            value={selectedPaymentMethod}
+            onChange={(e) => handlePaymentMethodChange(e.target.value)}
+          >
+            <option value="Efectivo">Efectivo</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+
+        {/* Total y botones */}
+        <div className="space-y-6">
+          <div className="flex justify-between items-center py-4 px-6 bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl">
+            <span className="text-lg font-semibold text-gray-800">Total a Pagar:</span>
+            <span className="text-2xl font-bold text-purple-600">
+              ${totalPrice.toLocaleString()}
+            </span>
+          </div>
+
+          <div className="flex gap-4">
+            <button
+              onClick={() => setModalOpen(false)}
+              className="flex-1 bg-gray-100 text-gray-600 py-3 px-6 rounded-xl font-medium hover:bg-gray-200 transition-colors duration-200 flex items-center justify-center gap-2"
+            >
+              <ArrowLeft className="h-5 w-5" />
+              Volver
+            </button>
+            <button
+              onClick={handlePago}
+              className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-6 rounded-xl font-medium hover:from-purple-700 hover:to-blue-700 transform hover:-translate-y-0.5 transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+            >
+              Confirmar Pedido
+              <Shield className="h-5 w-5" />
+            </button>
           </div>
         </div>
-      )}
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }
