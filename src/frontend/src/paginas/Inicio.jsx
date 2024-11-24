@@ -23,13 +23,18 @@ const Inicio = () => {
 
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-16">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute transform -rotate-6 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-white opacity-10 rounded-full"></div>
+          <div className="absolute transform rotate-12 translate-y-1/2 -translate-x-1/4 w-96 h-96 bg-white opacity-10 rounded-full"></div>
+        </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
               Descubre Productos Increíbles
             </h1>
             <p className="text-lg md:text-xl text-purple-100 max-w-2xl mx-auto">
-              Explora nuestra selección de productos cuidadosamente seleccionados para ti
+              Explora nuestra selección de productos cuidadosamente
+              seleccionados para ti
             </p>
           </div>
         </div>
@@ -73,30 +78,27 @@ const Inicio = () => {
           </div>
         </div>
 
-        {/* Newsletter Section */}
-        <div className="mt-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl shadow-xl p-8 text-white">
-          <div className="text-center">
+        {/* Brand Message Section */}
+        <div className="mt-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl shadow-xl p-8 text-white overflow-hidden relative">
+          {/* Decorative elements */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-0 left-0 w-40 h-40 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
+            <div className="absolute bottom-0 right-0 w-40 h-40 bg-white rounded-full transform translate-x-1/2 translate-y-1/2"></div>
+          </div>
+
+          <div className="text-center relative z-10">
             <h3 className="text-2xl font-bold mb-4">
-              ¿Quieres recibir las mejores ofertas?
+              Tu Satisfacción es Nuestra Prioridad
             </h3>
-            <p className="text-purple-100 mb-6">
-              Suscríbete a nuestro boletín y recibe actualizaciones exclusivas
+            <p className="text-purple-100 mb-2 max-w-2xl mx-auto">
+              Exploramos nuevas formas de brindarte la mejor experiencia
             </p>
-            <div className="flex max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Tu correo electrónico"
-                className="flex-1 px-4 py-2 rounded-l-lg text-gray-900 focus:outline-none"
-              />
-              <button className="px-6 py-2 bg-purple-900 text-white rounded-r-lg hover:bg-purple-800 transition-colors duration-300">
-                Suscribirse
-              </button>
-            </div>
+            <p className="text-purple-100 max-w-2xl mx-auto text-sm">
+              Gracias por confiar en nosotros
+            </p>
           </div>
         </div>
       </main>
-
-      
     </div>
   );
 };

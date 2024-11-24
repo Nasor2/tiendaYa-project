@@ -33,12 +33,27 @@ const MisPedidos = () => {
         );
         setDatos(response.data.pedidos);
       } catch (err) {
-        setError(err.response ? err.response.data.message : "Error de conexión");
+        setError(
+          err.response ? err.response.data.message : "Error de conexión"
+        );
       }
     };
 
     obtenerDatos();
   }, [user.token]);
+  useEffect(() => {
+    // Deshabilitar el scroll del body cuando un modal está abierto
+    if (selectedOrder) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    // Cleanup al desmontar
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [selectedOrder]);
 
   const handleOrderClick = (Pedidos) => {
     setSelectedOrder(Pedidos);
@@ -103,12 +118,17 @@ const MisPedidos = () => {
       <div className="relative overflow-hidden bg-gradient-to-r from-purple-600 to-blue-600">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQ0MCIgaGVpZ2h0PSI1MDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IHgxPSIwIiB5MT0iMCIgeDI9IjEwMCUiIHkyPSIxMDAlIiBpZD0iYSI+PHN0b3Agc3RvcC1jb2xvcj0iI2ZmZiIgb2Zmc2V0PSIwIi8+PHN0b3Agc3RvcC1jb2xvcj0iI2ZmZiIgb2Zmc2V0PSIxIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHBhdGggZmlsbD0idXJsKCNhKSIgZmlsbC1vcGFjaXR5PSIuMSIgZD0iTTAgMGgxNDQwdjUwMEgweiIvPjwvc3ZnPg==')] opacity-10"></div>
         <div className="relative px-4 py-24 sm:px-6 lg:px-8">
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute transform -rotate-6 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-white opacity-10 rounded-full"></div>
+            <div className="absolute transform rotate-12 translate-y-1/2 -translate-x-1/4 w-96 h-96 bg-white opacity-10 rounded-full"></div>
+          </div>
           <div className="text-center">
             <h1 className="text-6xl font-black text-white mb-6 tracking-tight">
               Mis Pedidos
             </h1>
             <p className="text-2xl text-purple-100 max-w-2xl mx-auto font-light">
-              Gestiona y realiza seguimiento a todos tus pedidos de manera fácil y rápida
+              Gestiona y realiza seguimiento a todos tus pedidos de manera fácil
+              y rápida
             </p>
           </div>
         </div>
@@ -186,12 +206,20 @@ const MisPedidos = () => {
               <div className="space-y-8">
                 <div className="grid grid-cols-2 gap-6">
                   <div className="bg-gradient-to-br from-purple-50 to-blue-50 p-6 rounded-2xl border border-purple-100/20">
-                    <p className="text-sm text-purple-600 font-medium mb-2">ID del Pedido</p>
-                    <p className="text-3xl font-black text-purple-800">#{selectedOrder.pedido_id}</p>
+                    <p className="text-sm text-purple-600 font-medium mb-2">
+                      ID del Pedido
+                    </p>
+                    <p className="text-3xl font-black text-purple-800">
+                      #{selectedOrder.pedido_id}
+                    </p>
                   </div>
                   <div className="bg-gradient-to-br from-purple-50 to-blue-50 p-6 rounded-2xl border border-purple-100/20">
-                    <p className="text-sm text-purple-600 font-medium mb-2">Fecha del Pedido</p>
-                    <p className="text-2xl font-bold text-purple-800">{selectedOrder.fecha_pedido}</p>
+                    <p className="text-sm text-purple-600 font-medium mb-2">
+                      Fecha del Pedido
+                    </p>
+                    <p className="text-2xl font-bold text-purple-800">
+                      {selectedOrder.fecha_pedido}
+                    </p>
                   </div>
                 </div>
 
@@ -212,7 +240,9 @@ const MisPedidos = () => {
                           </p>
                         </div>
                         <p className="text-3xl font-black bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                          ${producto.cantidad_producto * producto.precio_unitario_producto}
+                          $
+                          {producto.cantidad_producto *
+                            producto.precio_unitario_producto}
                         </p>
                       </div>
                     </div>
@@ -222,7 +252,9 @@ const MisPedidos = () => {
                 <div className="mt-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-white">
                   <div className="flex justify-between items-center">
                     <span className="text-2xl font-bold">Total Final</span>
-                    <span className="text-4xl font-black">${selectedOrder.total_pedido}</span>
+                    <span className="text-4xl font-black">
+                      ${selectedOrder.total_pedido}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -250,7 +282,8 @@ const MisPedidos = () => {
                   </h3>
                   <div className="space-y-4 text-gray-600">
                     <p className="font-medium text-xl">
-                      {selectedOrder.cliente.nombre_cliente} {selectedOrder.cliente.apellido_cliente}
+                      {selectedOrder.cliente.nombre_cliente}{" "}
+                      {selectedOrder.cliente.apellido_cliente}
                     </p>
                     <p className="flex items-center">
                       <Clock className="w-4 h-4 mr-2" />
@@ -275,7 +308,9 @@ const MisPedidos = () => {
                         )}`}
                       >
                         {getStatusIcon(selectedOrder.estado_pedido)}
-                        <span className="ml-2">{selectedOrder.estado_pedido}</span>
+                        <span className="ml-2">
+                          {selectedOrder.estado_pedido}
+                        </span>
                       </span>
                     </p>
                   </div>
@@ -346,7 +381,9 @@ const MisPedidos = () => {
                         </td>
                         <td className="px-6 py-5 text-right">
                           <span className="font-bold text-xl bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                            ${producto.cantidad_producto * producto.precio_unitario_producto}
+                            $
+                            {producto.cantidad_producto *
+                              producto.precio_unitario_producto}
                           </span>
                         </td>
                       </tr>
