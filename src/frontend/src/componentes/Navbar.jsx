@@ -81,7 +81,7 @@ const Navbar = () => {
             className="flex items-center gap-2 p-3 rounded-lg hover:bg-gray-50 
                     text-gray-700 transition-colors duration-300"
           >
-            <Store className="w-4 h-4" />
+            <Package className="w-4 h-4" />
             Pedidos
           </Link>
         </>
@@ -289,14 +289,25 @@ const Navbar = () => {
                     </div>
 
                     {user.role === "tendero" ? (
-                      <Link
-                        to="/mis-productos"
-                        className="flex items-center gap-2 p-3 rounded-lg hover:bg-gray-50 
-                                 text-gray-700 transition-colors duration-300"
-                      >
-                        <Store className="w-4 h-4" />
-                        Mis Productos
-                      </Link>
+                      <>
+                        <Link
+                          to="/mis-productos"
+                          className="flex items-center gap-2 p-3 rounded-lg hover:bg-gray-50 text-gray-700 transition-colors duration-300"
+                        >
+                          <Store className="w-4 h-4" />
+                          Mis Productos
+                        </Link>
+
+                        <Link
+                          to="/pedidos-tendero"
+                          className="flex items-center gap-2 p-3 rounded-lg hover:bg-gray-50 
+                                  text-gray-700 transition-colors duration-300"
+                        >
+                          <Package className="w-4 h-4" />
+                          Pedidos
+                        </Link>
+                      </>
+                      
                     ) : (
                       <>
                         <Link
