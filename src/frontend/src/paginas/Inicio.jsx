@@ -6,7 +6,7 @@ import Navbar from "../componentes/Navbar";
 
 const Inicio = () => {
   const [categorias, setCategorias] = useState([]);
-  const [numeroDeGrids] = useState(3);
+  const [numeroDeGrids] = useState(5);
 
   useEffect(() => {
     axios

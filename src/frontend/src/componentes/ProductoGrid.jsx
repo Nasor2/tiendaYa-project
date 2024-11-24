@@ -92,22 +92,13 @@ const ProductoGrid = ({ categoria }) => {
 
       {/* Contenedor principal con degradado en los bordes */}
       <div className="relative">
-        {/* Degradado izquierdo */}
-        {scrollPosition > 0 && (
-          <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-white to-transparent z-10" />
-        )}
-
-        {/* Degradado derecho */}
-        {scrollPosition < maxScroll && (
-          <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white to-transparent z-10" />
-        )}
 
         {/* Botones de navegación */}
         {productos.length > 3 && (
           <>
             <button
               onClick={scrollLeft}
-              className={`absolute left-2 z-20 p-3 bg-white rounded-full shadow-lg hover:shadow-xl transform transition-all duration-300 ${
+              className={`absolute left-2 z-10 p-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transform -translate-y-1/2 top-1/2 group ${
                 scrollPosition === 0
                   ? "opacity-0 -translate-x-full"
                   : "opacity-100 translate-x-0"
@@ -116,12 +107,12 @@ const ProductoGrid = ({ categoria }) => {
               style={{ top: "50%", transform: "translateY(-50%)" }}
               disabled={scrollPosition === 0}
             >
-              <ChevronLeft className="w-6 h-6 text-gray-800" />
+              <ChevronLeft className="w-6 h-6 text-purple-600 group-hover:text-purple-700" />
             </button>
 
             <button
               onClick={scrollRight}
-              className={`absolute right-2 z-20 p-3 bg-white rounded-full shadow-lg hover:shadow-xl transform transition-all duration-300 ${
+              className={`absolute right-2 z-10 p-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transform -translate-y-1/2 top-1/2 group ${
                 scrollPosition >= maxScroll
                   ? "opacity-0 translate-x-full"
                   : "opacity-100 translate-x-0"
@@ -130,7 +121,7 @@ const ProductoGrid = ({ categoria }) => {
               style={{ top: "50%", transform: "translateY(-50%)" }}
               disabled={scrollPosition >= maxScroll}
             >
-              <ChevronRight className="w-6 h-6 text-gray-800" />
+              <ChevronRight className="w-6 h-6 text-purple-600 group-hover:text-purple-700" />
             </button>
           </>
         )}

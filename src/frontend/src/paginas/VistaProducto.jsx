@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../componentes/Navbar";
 import TarjetaProducto from "../componentes/TarjetaProducto";
 import { useCart } from "../context/CartContext";
-import {  ArrowLeft } from "lucide-react";
-import { Store} from "lucide-react";
+import { ArrowLeft, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Store } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 
 const VistaProducto = () => {
@@ -12,18 +12,37 @@ const VistaProducto = () => {
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState("descripcion");
+  const [notification, setNotification] = useState({
+    show: false,
+    message: "",
+    type: "",
+  });
   const location = useLocation();
   const producto = location.state?.producto;
   const { addToCart, updateQuantity } = useCart();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const showNotification = (message, type) => {
+    setNotification({ show: true, message, type });
+    setTimeout(
+      () => setNotification({ show: false, message: "", type: "" }),
+      3000
+    );
+  };
+
+  const getNotificationStyles = (type) => {
+    return type === "error"
+      ? "bg-red-50 border-red-200 text-red-800"
+      : "bg-green-50 border-green-200 text-green-800";
+  };
+
   useEffect(() => {
     if (!user) {
       navigate("/login");
     } else if (user.role !== "cliente") {
       navigate("/");
-    } 
+    }
     if (producto?.nombre_categoria) {
       const fetchRelatedProducts = async () => {
         try {
@@ -81,16 +100,29 @@ const VistaProducto = () => {
     addToCart({ ...producto });
     updateQuantity(producto.producto_id, quantity);
     setQuantity(1);
+    showNotification("¡Producto Añadido a Carrito!", "success");
   };
 
   const handleGoCarrito = () => {
-    window.location.href = '/cart';
+    window.location.href = "/cart";
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
       <Navbar />
-
+      {/* Custom Notification */}
+      {notification.show && (
+        <div className="fixed top-4 right-4 z-50 animate-[fadeIn_0.3s_ease-in-out]">
+          <div className={`flex items-center gap-3 px-6 py-4 rounded-xl shadow-lg border ${getNotificationStyles(notification.type)}`}>
+            {notification.type === "error" ? (
+              <AlertCircle className="w-5 h-5" />
+            ) : (
+              <CheckCircle2 className="w-5 h-5" />
+            )}
+            <p className="font-medium">{notification.message}</p>
+          </div>
+        </div>
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <nav className="flex items-center space-x-4 text-sm">
           <a
@@ -147,7 +179,7 @@ const VistaProducto = () => {
 
                 <div className="flex items-center justify-between bg-gray-50 rounded-xl p-4">
                   <div className="flex items-center space-x-4">
-                  <Store className="w-8 h-8 text-gray-400" />
+                    <Store className="w-8 h-8 text-gray-400" />
                     <div>
                       <h3 className="font-medium text-gray-900">
                         {producto.nombre_tienda}
@@ -227,7 +259,7 @@ const VistaProducto = () => {
 
                 <div className="space-y-4">
                   <button
-                    onClick={ () => {
+                    onClick={() => {
                       handleAddToCart();
                       handleGoCarrito();
                     }}

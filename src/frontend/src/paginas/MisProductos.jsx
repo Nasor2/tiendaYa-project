@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState, useCallback } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
 import axios from "axios";
 import Navbar from "../componentes/Navbar";
 import ModalEditarProducto from "../componentes/ModalEditarProducto";
@@ -18,7 +19,25 @@ const MisProductos = () => {
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ventanaVisible, setVentanaVisible] = useState(false);
+  const [notification, setNotification] = useState({
+    show: false,
+    message: "",
+    type: "",
+  });
 
+  const showNotification = (message, type) => {
+    setNotification({ show: true, message, type });
+    setTimeout(
+      () => setNotification({ show: false, message: "", type: "" }),
+      3000
+    );
+  };
+
+  const getNotificationStyles = (type) => {
+    return type === "error"
+      ? "bg-red-50 border-red-200 text-red-800"
+      : "bg-green-50 border-green-200 text-green-800";
+  };
   const obtenerCategorias = useCallback(async () => {
     try {
       const { data } = await axios.get("http://localhost:3000/categorias");
@@ -58,12 +77,14 @@ const MisProductos = () => {
         getAuthHeaders(user.token)
       );
       setIsModalOpen(false);
+      showNotification("¡Inventario actualizado exitosamente!", "success");
       obtenerProductos();
     } catch (error) {
       console.error(
         "Error al actualizar el producto:",
         error.response || error
       );
+      showNotification("Error al actualizar inventario", "error");
     }
   };
 
@@ -91,7 +112,21 @@ const MisProductos = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <Navbar />
-
+      {/* Custom Notification */}
+      {notification.show && (
+        <div className="fixed top-4 right-4 z-50 animate-[fadeIn_0.3s_ease-in-out]">
+          <div
+            className={`flex items-center gap-3 px-6 py-4 rounded-xl shadow-lg border ${getNotificationStyles(notification.type)}`}
+          >
+            {notification.type === "error" ? (
+              <AlertCircle className="w-5 h-5" />
+            ) : (
+              <CheckCircle2 className="w-5 h-5" />
+            )}
+            <p className="font-medium">{notification.message}</p>
+          </div>
+        </div>
+      )}
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-12">
         <div className="absolute inset-0 overflow-hidden">
