@@ -9,7 +9,6 @@ const pedidoController = require('./controladores/pedidos');
 
 // Ruta para obtener todos los clientes
 router.get('/clientes', clienteController.getClientes);
-
 // Definir la ruta para obtener todas las categorías
 router.get('/categorias', categoriaController.getCategorias);
 

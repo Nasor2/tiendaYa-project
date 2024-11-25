@@ -1,9 +1,16 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../componentes/Navbar";
 import TarjetaProducto from "../componentes/TarjetaProducto";
 import { useCart } from "../context/CartContext";
-import { ArrowLeft, AlertCircle, CheckCircle2 } from "lucide-react";
+import {
+  ArrowLeft,
+  AlertCircle,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+
 import { Store } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 
@@ -17,11 +24,43 @@ const VistaProducto = () => {
     message: "",
     type: "",
   });
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [maxScroll, setMaxScroll] = useState(0);
+  const relatedProductsRef = useRef(null);
   const location = useLocation();
   const producto = location.state?.producto;
   const { addToCart, updateQuantity } = useCart();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const updateMaxScroll = () => {
+      if (relatedProductsRef.current) {
+        setMaxScroll(
+          relatedProductsRef.current.scrollWidth -
+            relatedProductsRef.current.clientWidth
+        );
+      }
+    };
+
+    updateMaxScroll();
+    window.addEventListener("resize", updateMaxScroll);
+    return () => window.removeEventListener("resize", updateMaxScroll);
+  }, [relatedProducts]);
+
+  const handleRelatedProductsScroll = () => {
+    if (relatedProductsRef.current) {
+      setScrollPosition(relatedProductsRef.current.scrollLeft);
+    }
+  };
+
+  const scrollRelatedProductsLeft = () => {
+    relatedProductsRef.current.scrollBy({ left: -300, behavior: "smooth" });
+  };
+
+  const scrollRelatedProductsRight = () => {
+    relatedProductsRef.current.scrollBy({ left: 300, behavior: "smooth" });
+  };
 
   const showNotification = (message, type) => {
     setNotification({ show: true, message, type });
@@ -53,7 +92,7 @@ const VistaProducto = () => {
           );
           const data = await response.json();
           if (data.productos && Array.isArray(data.productos)) {
-            setRelatedProducts(data.productos);
+            setRelatedProducts(data.productos.slice(0, 10));
           }
         } catch (error) {
           console.error("Error al buscar productos relacionados:", error);
@@ -113,7 +152,9 @@ const VistaProducto = () => {
       {/* Custom Notification */}
       {notification.show && (
         <div className="fixed top-4 right-4 z-50 animate-[fadeIn_0.3s_ease-in-out]">
-          <div className={`flex items-center gap-3 px-6 py-4 rounded-xl shadow-lg border ${getNotificationStyles(notification.type)}`}>
+          <div
+            className={`flex items-center gap-3 px-6 py-4 rounded-xl shadow-lg border ${getNotificationStyles(notification.type)}`}
+          >
             {notification.type === "error" ? (
               <AlertCircle className="w-5 h-5" />
             ) : (
@@ -300,31 +341,74 @@ const VistaProducto = () => {
         </div>
 
         {/* Productos relacionados */}
-        <div className="mt-16">
+        <div className="mt-16 relative">
           <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
             <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-6">
               <h2 className="text-2xl font-bold text-white">
                 Productos relacionados
               </h2>
             </div>
-            <div className="p-8">
+            <div className="p-8 relative">
               {isLoading ? (
                 <div className="flex items-center justify-center py-12">
                   <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent"></div>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                  {relatedProducts.length > 0 ? (
-                    relatedProducts.map((product, index) => (
-                      <TarjetaProducto key={index} producto={product} />
-                    ))
-                  ) : (
-                    <div className="col-span-full py-12">
-                      <p className="text-center text-gray-500">
-                        No se encontraron productos relacionados
-                      </p>
-                    </div>
+                <div className="relative">
+                  {relatedProducts.length > 3 && (
+                    <>
+                      <button
+                        onClick={scrollRelatedProductsLeft}
+                        className={`absolute left-0 z-10 p-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transform -translate-y-1/2 top-1/2 group ${
+                          scrollPosition === 0
+                            ? "opacity-0 -translate-x-full"
+                            : "opacity-100 translate-x-0"
+                        }`}
+                        aria-label="Anterior"
+                        style={{ top: "50%", transform: "translateY(-50%)" }}
+                        disabled={scrollPosition === 0}
+                      >
+                        <ChevronLeft className="w-6 h-6 text-purple-600 group-hover:text-purple-700" />
+                      </button>
+
+                      <button
+                        onClick={scrollRelatedProductsRight}
+                        className={`absolute right-0 z-10 p-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transform -translate-y-1/2 top-1/2 group ${
+                          scrollPosition >= maxScroll
+                            ? "opacity-0 translate-x-full"
+                            : "opacity-100 translate-x-0"
+                        }`}
+                        aria-label="Siguiente"
+                        style={{ top: "50%", transform: "translateY(-50%)" }}
+                        disabled={scrollPosition >= maxScroll}
+                      >
+                        <ChevronRight className="w-6 h-6 text-purple-600 group-hover:text-purple-700" />
+                      </button>
+                    </>
                   )}
+
+                  <div
+                    ref={relatedProductsRef}
+                    onScroll={handleRelatedProductsScroll}
+                    className="flex overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-4 -mx-4 px-4 gap-7"
+                  >
+                    {relatedProducts.length > 0 ? (
+                      relatedProducts.map((product, index) => (
+                        <div
+                          key={index}
+                          className="snap-start flex-none pr-6 w-72 transform transition-transform duration-300 hover:scale-105"
+                        >
+                          <TarjetaProducto producto={product} />
+                        </div>
+                      ))
+                    ) : (
+                      <div className="col-span-full py-12 text-center w-full">
+                        <p className="text-gray-500">
+                          No se encontraron productos relacionados
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -334,5 +418,4 @@ const VistaProducto = () => {
     </div>
   );
 };
-
 export default VistaProducto;

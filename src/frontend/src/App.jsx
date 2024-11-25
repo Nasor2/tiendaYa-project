@@ -2,7 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { CartProvider } from "./context/CartContext";
-import { AuthProvider } from "./context/AuthContext"; // Importa tu AuthProvider
+import { AuthProvider } from "./context/AuthContext";
 import Login from './paginas/Login';
 import Registro from './paginas/Registro';
 import Inicio from './paginas/Inicio';
@@ -17,9 +17,9 @@ import PedidosTendero from './paginas/PedidosTendero';
 
 function App() {
   return (
-    <Router> {/* Router debe envolver todos los providers */}
-      <AuthProvider> {/* AuthProvider ahora está dentro del Router */}
-        <CartProvider> {/* CartProvider también dentro del Router */}
+    <Router> 
+      <AuthProvider> 
+        <CartProvider> 
           <div className="flex flex-col min-h-screen">
             <div className="flex-1">
               <Routes>
