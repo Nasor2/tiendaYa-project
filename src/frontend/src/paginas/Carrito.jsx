@@ -152,7 +152,7 @@ export default function Carrito() {
                 {cartItems.length > 0 ? (
                   cartItems.map((item) => (
                     <div
-                      key={item.id}
+                      key={item.producto_id}
                       className="p-6 flex items-center gap-6 hover:bg-gray-50 transition-all duration-300 group"
                     >
                       <div className="relative overflow-hidden rounded-2xl">

@@ -315,8 +315,8 @@ const VistaProducto = () => {
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                   {relatedProducts.length > 0 ? (
-                    relatedProducts.map((product) => (
-                      <TarjetaProducto key={product.id} producto={product} />
+                    relatedProducts.map((product, index) => (
+                      <TarjetaProducto key={index} producto={product} />
                     ))
                   ) : (
                     <div className="col-span-full py-12">

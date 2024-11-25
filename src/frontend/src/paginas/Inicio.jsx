@@ -44,7 +44,7 @@ const Inicio = () => {
         {/* Featured Products Sections */}
         {categorias.slice(0, numeroDeGrids).map((categoria) => (
           <div
-            key={categoria.idCategoria}
+            key={categoria.categoria_id}
             className="mb-12 transform transition-all duration-300 hover:scale-[1.01]"
           >
             <div className="bg-white rounded-2xl shadow-xl overflow-hidden">

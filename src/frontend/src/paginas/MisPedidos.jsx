@@ -150,7 +150,7 @@ const MisPedidos = () => {
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-800 mb-2">
-                      Pedido #{Pedidos.pedido_id}
+                      ID del Pedido: {Pedidos.pedido_id}
                     </h3>
                     <p className="text-gray-500 flex items-center">
                       <Clock className="w-4 h-4 mr-2" />
@@ -178,56 +178,56 @@ const MisPedidos = () => {
 
         {/* Modal de Detalles del Pedido */}
         {selectedOrder && !showInvoice && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-40 p-4">
-            <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-3xl max-h-[90vh] overflow-y-auto relative border border-purple-100">
-              <div className="sticky top-0 bg-white z-10 pb-6 mb-6 border-b border-purple-100">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-4xl font-black bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                    Detalles del Pedido
-                  </h2>
-                  <div className="flex items-center space-x-4">
-                    <button
-                      onClick={handleShowInvoice}
-                      className="flex items-center px-6 py-3 text-white bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                    >
-                      <FileText className="w-5 h-5 mr-2" />
-                      Ver Factura
-                    </button>
-                    <button
-                      onClick={() => setSelectedOrder(null)}
-                      className="text-gray-500 hover:text-gray-700 transition-colors duration-200 bg-gray-100 p-2 rounded-xl hover:bg-gray-200"
-                    >
-                      <X className="w-6 h-6" />
-                    </button>
-                  </div>
+        <div className="fixed inset-x-0 top-[64px] bottom-0 bg-black/60 backdrop-blur-md flex items-start justify-center z-40 p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-3xl my-8 border border-purple-100">
+            <div className="sticky top-0 bg-white z-10 pb-6 mb-6 border-b border-purple-100">
+              <div className="flex items-center justify-between">
+                <h2 className="text-4xl font-black bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                  Detalles del Pedido
+                </h2>
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={handleShowInvoice}
+                    className="flex items-center px-6 py-3 text-white bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                  >
+                    <FileText className="w-5 h-5 mr-2" />
+                    Ver Factura
+                  </button>
+                  <button
+                    onClick={() => setSelectedOrder(null)}
+                    className="text-gray-500 hover:text-gray-700 transition-colors duration-200 bg-gray-100 p-2 rounded-xl hover:bg-gray-200"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
                 </div>
               </div>
+            </div>
 
-              <div className="space-y-8">
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="bg-gradient-to-br from-purple-50 to-blue-50 p-6 rounded-2xl border border-purple-100/20">
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-gradient-to-br from-purple-50 to-blue-50 p-3 rounded-2xl border border-purple-100/20">
                     <p className="text-sm text-purple-600 font-medium mb-2">
                       ID del Pedido
                     </p>
                     <p className="text-3xl font-black text-purple-800">
-                      #{selectedOrder.pedido_id}
+                      {selectedOrder.pedido_id}
                     </p>
                   </div>
                   <div className="bg-gradient-to-br from-purple-50 to-blue-50 p-6 rounded-2xl border border-purple-100/20">
                     <p className="text-sm text-purple-600 font-medium mb-2">
                       Fecha del Pedido
                     </p>
-                    <p className="text-2xl font-bold text-purple-800">
+                    <p className="text-3x1 font-bold text-purple-800">
                       {selectedOrder.fecha_pedido}
                     </p>
                   </div>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-2">
                   {selectedOrder.productos.map((producto, index) => (
                     <div
                       key={index}
-                      className="group bg-white rounded-2xl border border-purple-100 shadow-sm hover:shadow-md transition-all duration-300 p-6 hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-blue-50/50"
+                      className="group bg-white rounded-2xl border border-purple-100 shadow-sm hover:shadow-md transition-all duration-300 p-3 hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-blue-50/50"
                     >
                       <div className="flex justify-between items-center">
                         <div className="flex-1">
@@ -240,7 +240,7 @@ const MisPedidos = () => {
                           </p>
                         </div>
                         {/* Estado centrado absolutamente respecto al div principal */}
-                        <div className="absolute left-[40%] transform -translate-x-1/2">
+                        <div className="absolute left-[47%] transform -translate-x-1/2">
                           <span
                             className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium ${getStatusClass(
                               producto.estado_producto
@@ -260,10 +260,10 @@ const MisPedidos = () => {
                   ))}
                 </div>
 
-                <div className="mt-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-white">
+                <div className="mt-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-6 text-white">
                   <div className="flex justify-between items-center">
                     <span className="text-2xl font-bold">Total Final</span>
-                    <span className="text-4xl font-black">
+                    <span className="text-3xl font-black">
                       ${selectedOrder.total_pedido}
                     </span>
                   </div>
@@ -273,82 +273,78 @@ const MisPedidos = () => {
           </div>
         )}
 
-        {/* Modal de Factura */}
+        {/* Modal de Factura - Reducido y simplificado */}
         {selectedOrder && showInvoice && (
           <div className="fixed inset-0 bg-black/70 backdrop-blur-lg flex items-center justify-center z-50">
-            <div className="bg-white rounded-3xl shadow-2xl p-12 w-[95%] max-w-5xl max-h-[90vh] overflow-y-auto border border-purple-100">
-              <div className="text-center mb-12">
-                <h2 className="text-5xl font-black bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-4">
+            <div className="bg-white rounded-3xl shadow-2xl p-8 w-[95%] max-w-4xl max-h-[95vh] overflow-y-auto border border-purple-100">
+              <div className="text-center mb-8">
+                <h2 className="text-4xl font-black bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2">
                   Factura Digital
                 </h2>
-                <p className="text-xl text-gray-600">
-                  Pedido #{selectedOrder.pedido_id}
+                <p className="text-lg text-gray-600">
+                  ID del Pedido: {selectedOrder.pedido_id}
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-8 mb-12">
-                <div className="bg-gradient-to-br from-purple-50 to-blue-50 p-8 rounded-2xl border border-purple-100/20">
-                  <h3 className="text-2xl font-bold text-gray-800 mb-6">
+              <div className="grid grid-cols-2 gap-6 mb-8">
+                <div className="bg-gradient-to-br from-purple-50 to-blue-50 p-6 rounded-2xl border border-purple-100/20">
+                  <h3 className="text-xl font-bold text-gray-800 mb-4">
                     Datos del Cliente
                   </h3>
-                  <div className="space-y-4 text-gray-600">
-                    <p className="font-medium text-xl">
+                  <div className="space-y-3 text-gray-600">
+                    <p className="font-medium text-lg">
                       {selectedOrder.cliente.nombre_cliente}{" "}
                       {selectedOrder.cliente.apellido_cliente}
                     </p>
-                    <p className="flex items-center">
+                    <p className="flex items-center text-sm">
                       <Clock className="w-4 h-4 mr-2" />
                       {selectedOrder.cliente.correo_cliente}
                     </p>
-                    <p>{selectedOrder.cliente.dirrecion_cliente}</p>
+                    <p className="text-sm">{selectedOrder.cliente.dirrecion_cliente}</p>
                   </div>
                 </div>
-                <div className="bg-gradient-to-br from-purple-50 to-blue-50 p-8 rounded-2xl border border-purple-100/20">
-                  <h3 className="text-2xl font-bold text-gray-800 mb-6">
+                <div className="bg-gradient-to-br from-purple-50 to-blue-50 p-6 rounded-2xl border border-purple-100/20">
+                  <h3 className="text-xl font-bold text-gray-800 mb-4">
                     Detalles de Factura
                   </h3>
-                  <div className="space-y-4 text-gray-600">
-                    <p className="text-xl">
-                      Fecha: {selectedOrder.fecha_pedido}
-                    </p>
+                  <div className="space-y-3 text-gray-600">
+                    <p className="text-lg">Fecha: {selectedOrder.fecha_pedido}</p>
                     <p className="flex items-center">
                       Estado:
                       <span
-                        className={`ml-3 inline-flex items-center px-4 py-2 rounded-full text-sm font-medium ${getStatusClass(
+                        className={`ml-2 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusClass(
                           selectedOrder.estado_pedido
                         )}`}
                       >
                         {getStatusIcon(selectedOrder.estado_pedido)}
-                        <span className="ml-2">
-                          {selectedOrder.estado_pedido}
-                        </span>
+                        <span className="ml-2">{selectedOrder.estado_pedido}</span>
                       </span>
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-3xl shadow-xl overflow-hidden mb-12 border border-purple-100">
+              <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-8 border border-purple-100">
                 <table className="w-full">
                   <thead>
                     <tr className="bg-gradient-to-r from-purple-600 to-blue-600">
-                      <th className="px-6 py-4 text-left text-white font-bold">
+                      <th className="px-4 py-3 text-left text-white font-bold text-sm">
                         Producto
                       </th>
-                      <th className="px-6 py-4 text-left text-white font-bold">
+                      <th className="px-4 py-3 text-left text-white font-bold text-sm">
                         Vendedor
                       </th>
-                      <th className="px-6 py-4 text-left text-white font-bold">
+                      <th className="hidden md:table-cell px-4 py-3 text-left text-white font-bold text-sm">
                         Contacto
                       </th>
-                      <th className="px-6 py-4 text-center text-white font-bold">
-                        Cantidad
+                      <th className="px-4 py-3 text-center text-white font-bold text-sm">
+                        Cant.
                       </th>
-                      <th className="px-6 py-4 text-right text-white font-bold">
+                      <th className="px-4 py-3 text-right text-white font-bold text-sm">
                         Precio
                       </th>
-                      <th className="px-6 py-4 text-right text-white font-bold">
-                        Subtotal
+                      <th className="px-4 py-3 text-right text-white font-bold text-sm">
+                        Total
                       </th>
                     </tr>
                   </thead>
@@ -358,43 +354,40 @@ const MisPedidos = () => {
                         key={index}
                         className="group hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-blue-50/50 transition-colors duration-300"
                       >
-                        <td className="px-6 py-5">
-                          <div className="font-semibold text-gray-800 text-lg group-hover:text-purple-700 transition-colors">
+                        <td className="px-4 py-4">
+                          <div className="font-semibold text-gray-800 text-sm group-hover:text-purple-700 transition-colors">
                             {producto.nombre_producto}
                           </div>
                         </td>
-                        <td className="px-6 py-5">
-                          <div className="font-medium text-gray-800">
-                            {producto.tendero.nombre_tendero}{" "}
-                            {producto.tendero.apellido_tendero}
+                        <td className="px-4 py-4">
+                          <div className="font-medium text-gray-800 text-sm">
+                            {producto.tendero.nombre_tendero}
                           </div>
-                          <div className="text-sm text-purple-600 mt-1">
+                          <div className="text-xs text-purple-600">
                             {producto.tendero.nombre_tienda_tendero}
                           </div>
                         </td>
-                        <td className="px-6 py-5">
-                          <div className="text-gray-600 flex items-center">
-                            <Clock className="w-4 h-4 mr-2 text-purple-500" />
+                        <td className="hidden md:table-cell px-4 py-4">
+                          <div className="text-gray-600 flex items-center text-sm">
+                            <Clock className="w-3 h-3 mr-1 text-purple-500" />
                             {producto.tendero.telefono_tendero}
                           </div>
                         </td>
-                        <td className="px-6 py-5">
+                        <td className="px-4 py-4">
                           <div className="flex justify-center">
-                            <span className="inline-flex items-center justify-center bg-purple-100 text-purple-800 px-4 py-2 rounded-full font-medium">
+                            <span className="inline-flex items-center justify-center bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
                               {producto.cantidad_producto}
                             </span>
                           </div>
                         </td>
-                        <td className="px-6 py-5 text-right">
-                          <span className="font-medium text-gray-800">
+                        <td className="px-4 py-4 text-right">
+                          <span className="font-medium text-gray-800 text-sm">
                             ${producto.precio_unitario_producto}
                           </span>
                         </td>
-                        <td className="px-6 py-5 text-right">
-                          <span className="font-bold text-xl bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                            $
-                            {producto.cantidad_producto *
-                              producto.precio_unitario_producto}
+                        <td className="px-4 py-4 text-right">
+                          <span className="font-bold text-lg bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                            ${producto.cantidad_producto * producto.precio_unitario_producto}
                           </span>
                         </td>
                       </tr>
@@ -404,11 +397,11 @@ const MisPedidos = () => {
                     <tr className="bg-gradient-to-r from-purple-600 to-blue-600">
                       <td
                         colSpan="5"
-                        className="px-6 py-6 text-right text-white font-bold text-xl"
+                        className="px-4 py-4 text-right text-white font-bold text-lg"
                       >
                         Total Final:
                       </td>
-                      <td className="px-6 py-6 text-right text-white font-black text-3xl">
+                      <td className="px-4 py-4 text-right text-white font-black text-2xl">
                         ${selectedOrder.total_pedido}
                       </td>
                     </tr>
@@ -416,15 +409,15 @@ const MisPedidos = () => {
                 </table>
               </div>
 
-              <div className="text-center space-y-6">
+              <div className="text-center space-y-4">
                 <button
                   onClick={() => setShowInvoice(false)}
-                  className="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg shadow-md inline-flex items-center space-x-2"
+                  className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg shadow-md inline-flex items-center space-x-2"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                   <span>Volver a Detalles</span>
                 </button>
-                <p className="text-sm text-gray-500">
+                <p className="text-xs text-gray-500">
                   Presiona el botón para volver a los detalles del pedido
                 </p>
               </div>

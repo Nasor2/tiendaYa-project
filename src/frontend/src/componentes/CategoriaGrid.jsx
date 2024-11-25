@@ -40,7 +40,7 @@ const CategoriaGrid = ({ categorias }) => {
       >
         {categorias.map((categoria) => (
           <div
-            key={categoria.idCategoria}
+            key={categoria.categoria_id}
             onClick={() => handleCategoryClick(categoria.nombre_categoria)}
             className="group relative flex flex-col items-center p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 min-w-[240px] h-[160px] border border-gray-100 cursor-pointer overflow-hidden transform hover:scale-[1.02]"
           >

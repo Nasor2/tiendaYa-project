@@ -166,7 +166,7 @@ export default function PedidosTendero() {
                   <div className="flex justify-between items-center">
                     <h2 className="text-3xl font-bold text-white flex items-center gap-3">
                       <ShoppingCart className="w-8 h-8" />
-                      Pedido #{pedido.pedido_id}
+                      ID del Pedido: {pedido.pedido_id}
                     </h2>
                     <div className={`px-6 py-2 rounded-full text-sm font-medium border ${getEstadoColor(pedido.estado_pedido)} flex items-center gap-2`}>
                       {getEstadoIcon(pedido.estado_pedido)}

@@ -62,7 +62,7 @@ const Filtros = ({ onFilterChange }) => {
       <div className="space-y-2">
         {categorias.map((categoria) => (
           <button
-            key={categoria.idCategoria}
+            key={categoria.categoria_id}
             className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
               selectedCategory === categoria.nombre_categoria
                 ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-md'

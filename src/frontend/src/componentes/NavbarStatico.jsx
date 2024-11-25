@@ -16,16 +16,6 @@ const NavBarStatico = () => {
           </span>
         </Link>
       </div>
-
-      <style jsx>{`
-        .nav-link {
-          @apply text-gray-600 hover:text-blue-600 transition-colors duration-300;
-        }
-
-        .mobile-nav-link {
-          @apply text-gray-600 hover:text-blue-600 py-2 transition-colors duration-300;
-        }
-      `}</style>
     </header>
   );
 };

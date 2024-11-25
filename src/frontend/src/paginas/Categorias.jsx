@@ -106,7 +106,7 @@ const Categorias = () => {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {categorias.map((categoria) => (
             <div
-              key={categoria.idCategoria}
+              key={categoria.categoria_id}
               className="group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-1"
               onClick={() => handleCategoryClick(categoria.nombre_categoria)}
             >

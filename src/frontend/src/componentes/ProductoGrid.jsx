@@ -133,9 +133,9 @@ const ProductoGrid = ({ categoria }) => {
           className="flex overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-4 -mx-4 px-4 gap-7"
         >
           {productos.length > 0 ? (
-            productos.map((producto) => (
+            productos.map((producto, index) => (
               <div
-                key={producto.id}
+                key={index}
                 className="snap-start flex-none pr-6 w-72 transform transition-transform duration-300 hover:scale-105"
               >
                 <TarjetaProducto producto={producto} />
