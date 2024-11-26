@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
   res.send('¡Backend funcionando!');
 });
 
-app.use(authRoutes);  // Incluir la ruta de clientes (y de auth) aquí
+app.use(authRoutes);  
 
 
 

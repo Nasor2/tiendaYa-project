@@ -1,8 +1,8 @@
 // controladores/categorias.js
-const db = require('../db'); // Asegúrate de que el archivo 'db.js' tenga la configuración de conexión a MySQL.
+const db = require('../db'); 
 
 const getCategorias = (req, res) => {
-  const query = 'SELECT * FROM categorias'; // Ajusta según el nombre exacto de tu tabla
+  const query = 'SELECT * FROM categorias'; 
 
   db.query(query, (error, results) => {
     if (error) {
@@ -10,7 +10,7 @@ const getCategorias = (req, res) => {
       return res.status(500).json({ mensaje: 'Error en el servidor al obtener categorías' });
     }
 
-    res.json(results); // Enviamos los resultados como JSON
+    res.json(results); // Se envian los resultados como JSON
   });
 };
 

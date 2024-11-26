@@ -15,7 +15,6 @@ export const CartProvider = ({ children }) => {
     }
     return [];
   });
-  
 
   // Actualiza el localStorage cuando cambien los elementos del carrito
   useEffect(() => {
@@ -37,7 +36,7 @@ export const CartProvider = ({ children }) => {
     });
   };
 
-    // Función para actualizar la cantidad de un producto
+  // Función para actualizar la cantidad de un producto
   const updateQuantity = (id, increment) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>

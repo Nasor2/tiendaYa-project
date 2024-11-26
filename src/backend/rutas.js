@@ -28,8 +28,6 @@ router.get('/pedidos', authController.verificarToken(['cliente']), pedidoControl
 // Rutas para pago de pedidos
 router.post('/pedidos/pago', authController.verificarToken(['cliente']), pedidoController.crearPedido);
 
-//router.get('/pedidos/:idPedido', authController.verificarToken(['cliente']), pedidoController.obtenerDetallePedido);
-
 // Rutas para tenderos
 router.get('/pedidos-tenderos', authController.verificarToken(['tendero']), pedidoController.obtenerPedidosPorTendero);
 

@@ -1,6 +1,5 @@
 // modelos/inventario.js
-
-const db = require('../db'); // Aquí puedes importar tu configuración de la base de datos
+const db = require('../db');
 
 // Función para agregar un producto al inventario de un tendero
 exports.agregarInventarioTendero = ({ idTendero, idProducto, stock, precio}, callback) => {

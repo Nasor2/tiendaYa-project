@@ -1,8 +1,8 @@
 const bcrypt = require("bcrypt");
-const clienteModel = require("../modelos/cliente"); // Importa el modelo de cliente
-const tenderoModel = require("../modelos/tendero"); // Importa el modelo de tendero
-const inventarioModel = require("../modelos/inventario"); // Asegúrate de importar tu modelo
-const jwt = require("jsonwebtoken"); // Asegúrate de importar 'jsonwebtoken'
+const clienteModel = require("../modelos/cliente"); 
+const tenderoModel = require("../modelos/tendero"); 
+const inventarioModel = require("../modelos/inventario"); 
+const jwt = require("jsonwebtoken"); 
 
 exports.verificarToken = (rolesPermitidos) => (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1]; // Extrae el token del header
