@@ -15,6 +15,7 @@ const Categorias = () => {
       try {
         const response = await axios.get("http://localhost:3000/categorias");
         setCategorias(response.data);
+        console.log(response.data)
         setIsLoading(false);
       } catch (error) {
         console.error("Error al obtener las categorías:", error);
@@ -117,7 +118,7 @@ const Categorias = () => {
                     <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg"></div>
                     <div className="relative">
                       <img
-                        src={`/assets/imagenes-categorias/${categoria.nombre_categoria}.jpg`}
+                        src={`../assets/imagenes-Categorias/${categoria.nombre_categoria}.jpg`}
                         alt={categoria.nombre_categoria}
                         className="w-24 h-24 object-cover rounded-2xl shadow-lg transform group-hover:scale-105 transition-all duration-300"
                       />
